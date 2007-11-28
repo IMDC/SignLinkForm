@@ -96,12 +96,15 @@ public class QuestionType extends JFrame
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == QuestionType.this.cancelButton){
 				QuestionType.this.setVisible(false);
-			} else if (e.getSource() == QuestionType.this.radioButton){
+			} else {
+				if (e.getSource() == QuestionType.this.radioButton){
 				QuestionType.this.qList.addQuestion('a');
+				} else if (e.getSource() == QuestionType.this.checkboxButton){
+					QuestionType.this.qList.addQuestion('c');
+				}
 				QuestionType.this.setVisible(false);
-			} else if (e.getSource() == QuestionType.this.checkboxButton){
-				QuestionType.this.qList.addQuestion('c');
-				QuestionType.this.setVisible(false);
+				CreateWindow.getInstance().setVisible(true);
+				
 			}
 			
 		}
