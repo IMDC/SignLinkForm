@@ -200,7 +200,7 @@ public class CreateWindow extends JFrame implements WindowListener {
 
 						exportFrame.setVisible(true);
 
-						final File newFile = new File("./.flexTemp/tmp.mp4");
+						final File newFile = new File("e:/tmp.mp4");
 						final MovieExporter mExport = new MovieExporter(f
 								.getAbsolutePath(), newFile.getAbsolutePath(),
 								"mp4");
@@ -282,9 +282,9 @@ public class CreateWindow extends JFrame implements WindowListener {
 		}
 		
 		private void revealWelcomeWindow() {
-//			welcomeframe.setVisible(true);
-//			welcomeframe.requestFocus();
-//			welcomeframe.getHelp().setVisible(true);
+			questionList.setVisible(true);
+			questionList.requestFocus();
+//			questionList.getHelp().setVisible(true);
 		}
 		
 		public void closeCreateWindow() {

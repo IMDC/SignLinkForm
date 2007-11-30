@@ -18,8 +18,8 @@ import java.nio.channels.FileChannel;
 public abstract class SignUtils
 {
 	//this folder will be available when running the jar file. It will extract it from the folder onejar inside the jar file.
-	public static final File FLEXFOLDER = new File("./.flexTemp");
-	public static final File FFMPEGFOLDER = new File("./.flexTemp/ffmpeg");
+	public static final File FLEXFOLDER = new File("../.flexTemp");
+	public static final File FFMPEGFOLDER = new File("../.flexTemp/ffmpeg");
 	/** Fast & simple file copy. */
 	public static void copy(File source, File dest) throws IOException
 	{
@@ -45,7 +45,7 @@ public abstract class SignUtils
 
 	public static void removeTempFiles()
 	{
-		System.out.println("Temp directory deletion: " + deleteDir(FLEXFOLDER));
+//		System.out.println("Temp directory deletion: " + deleteDir(FLEXFOLDER));
 	}
 
 	// Deletes all files and subdirectories under dir.
@@ -79,6 +79,6 @@ public abstract class SignUtils
 	public static void cleanUpAndExit(int exitCode)
 	{
 		removeTempFiles();
-		System.exit(exitCode);
+	//	System.exit(exitCode);
 	}
 }
