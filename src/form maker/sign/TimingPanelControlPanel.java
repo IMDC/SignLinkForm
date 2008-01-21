@@ -4,12 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -20,7 +18,7 @@ import javax.swing.Timer;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: TimingPanelControlPanel.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: TimingPanelControlPanel.java 94 2007-12-18 21:31:47Z martin $
  *
  */
 public class TimingPanelControlPanel extends VideoButtonsPanel
@@ -29,6 +27,7 @@ public class TimingPanelControlPanel extends VideoButtonsPanel
 	 * 
 	 */
 	private static final long	serialVersionUID	= 2078253719580405631L;
+	private SignlinkIcons images = SignlinkIcons.getInstance();
 	private TimingComponent		tComp;
 	private JButton				beginningFrameBack;
 	private JButton				beginning;
@@ -64,52 +63,44 @@ public class TimingPanelControlPanel extends VideoButtonsPanel
 
 	private void addButtons()
 	{
-		final ImageIcon frameBack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/sHandleStepBackward.jpg")));
-		final ImageIcon frameForward = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/sHandleStepForward.jpg")));
-		final ImageIcon beginningIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHandleStart.jpg")));
-		final ImageIcon endingIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sHandleEnd.jpg")));
-		final ImageIcon previewIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sPlaySignlink.jpg")));
 
-		beginningFrameForward = new JButton(frameForward);
+		beginningFrameForward = new JButton(images.handleStepForwardIcon);
 		beginningFrameForward.setPreferredSize(new Dimension(20, 20));
 		beginningFrameForward.setActionCommand("beginning frame forward");
 		beginningFrameForward.addActionListener(getListen());
 		beginningFrameForward.setBackground(Color.GRAY);
 
-		beginningFrameBack = new JButton(frameBack);
+		beginningFrameBack = new JButton(images.handleStepBackwardIcon);
 		beginningFrameBack.setPreferredSize(new Dimension(20, 20));
 		beginningFrameBack.setActionCommand("beginning frame back");
 		beginningFrameBack.addActionListener(getListen());
 		beginningFrameBack.setBackground(Color.GRAY);
 
-		beginning = new JButton(beginningIcon);
+		beginning = new JButton(images.handleStartIcon);
 		beginning.setPreferredSize(new Dimension(20, 20));
 		beginning.setActionCommand("beginning");
 		beginning.addActionListener(getListen());
 		beginning.setBackground(Color.GRAY);
 
-		endingFrameForward = new JButton(frameForward);
+		endingFrameForward = new JButton(images.handleStepForwardIcon);
 		endingFrameForward.setPreferredSize(new Dimension(20, 20));
 		endingFrameForward.setActionCommand("ending frame forward");
 		endingFrameForward.addActionListener(getListen());
 		endingFrameForward.setBackground(Color.GRAY);
 
-		endingFrameBack = new JButton(frameBack);
+		endingFrameBack = new JButton(images.handleStepBackwardIcon);
 		endingFrameBack.setPreferredSize(new Dimension(20, 20));
 		endingFrameBack.setActionCommand("ending frame back");
 		endingFrameBack.addActionListener(getListen());
 		endingFrameBack.setBackground(Color.GRAY);
 
-		ending = new JButton(endingIcon);
+		ending = new JButton(images.handleEndIcon);
 		ending.setPreferredSize(new Dimension(20, 20));
 		ending.setActionCommand("ending");
 		ending.addActionListener(getListen());
 		ending.setBackground(Color.GRAY);
 
-		previewButton = new JButton("Preview", previewIcon);
+		previewButton = new JButton("Preview", images.previewSignLinkIcon);
 		previewButton.setActionCommand("preview");
 		previewButton.addActionListener(getListen());
 		previewButton.setBackground(Color.GRAY);
