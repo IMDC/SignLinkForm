@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoListener.java 53 2007-11-08 21:47:32Z martin $
+ * @version $Id: VideoListener.java 86 2007-12-04 19:18:33Z martin $
  */
 public class VideoListener implements ActionListener
 {
@@ -128,12 +128,12 @@ public class VideoListener implements ActionListener
 			{
 				if (frame.getHelp() == null)
 				{
-					frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+					frame.setHelp(new HelpFrame(HelpFrame.A6, frame.getHelpLocation()));
 				}
 				else
 				{
 					frame.getHelp().dispose();
-					frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+					frame.setHelp(new HelpFrame(HelpFrame.A6, frame.getHelpLocation()));
 				}
 			}
 		}
