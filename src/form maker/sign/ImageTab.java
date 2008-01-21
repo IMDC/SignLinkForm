@@ -6,7 +6,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -18,19 +17,25 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 /**
+ * Container class that is used as the Tab for setting the image thumbnail of a link
  * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: ImageTab.java 65 2007-11-22 16:49:31Z martin $
- *
+ * @version $Id: ImageTab.java 94 2007-12-18 21:31:47Z martin $
  */
 public class ImageTab extends JPanel
 {
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+	/**
+	 * Listener class for the buttons on the Image Tab
+	 * 
+	 * @author Martin Gerdzhev
+	 * @version $Id: ImageTab.java 94 2007-12-18 21:31:47Z martin $
+	 */
 	class ButtonsListener implements ActionListener
 	{
 
@@ -66,17 +71,23 @@ public class ImageTab extends JPanel
 						glass.getViewWidth(), glass.getViewHeight()));
 				iComp.setValue(vPanel.getTime());
 				iComp.setPosition(vSlide.getCoordfromValue(iComp.getValue()));
-				// frame.getSign().setFTime(vPanel.getTime());
 			}
 
 		}
 
 	}
 
+	/**
+	 * Listener class that initializes variables and updates others due to changes in Timing Tab when component is hidden or shown
+	 * 
+	 * @author Martin Gerdzhev
+	 */
 	class CListener implements ComponentListener
 	{
 		public void componentHidden(final ComponentEvent arg0)
 		{
+			OFFSETX = ImageTab.this.getX() + ImageTab.this.getParent().getX();
+			OFFSETY = ImageTab.this.getY() + ImageTab.this.getParent().getY();
 			frame = (SignLink) ImageTab.this.getRootPane().getParent();
 			glass = (GlassPanel) frame.getGlassPane();
 			frame.getGlassPane().setVisible(false);
@@ -84,16 +95,22 @@ public class ImageTab extends JPanel
 			{
 				frame.getHelp().dispose();
 			}
+			if (!isInitialized())
+			{
+				glass.setStartX(glass.getStartX() + vPanel.getX() + OFFSETX);
+				glass.setStartY(glass.getStartY() + vPanel.getY() + OFFSETY);
+				iComp.setValue(vSlide.getValue());
+				iComp.setPosition(vSlide.getCoordfromValue(iComp.getValue()));
+				setInitialized(true);
+			}
 		}
 
 		public void componentMoved(final ComponentEvent arg0)
 		{
-
 		}
 
 		public void componentResized(final ComponentEvent arg0)
 		{
-
 		}
 
 		public void componentShown(final ComponentEvent arg0)
@@ -106,15 +123,10 @@ public class ImageTab extends JPanel
 			{
 				glass.setStartX(glass.getStartX() + vPanel.getX() + OFFSETX);
 				glass.setStartY(glass.getStartY() + vPanel.getY() + OFFSETY);
-// vSlide.setActiveStart(vSlide.getCoordfromValue(vSlide.getMinimum()));
-// vSlide.setActiveEnd(vSlide.getCoordfromValue(vSlide.getMaximum()));
-// vSlide.setValue(iComp.getValue());
-// vSlide.repaint();
 				setInitialized(true);
-// commitChanges();
 			}
 			frame.getGlassPane().setVisible(true);
-			frame.setHelpFile(HelpFrame.A1);
+			frame.setHelpFile(HelpFrame.A9);
 			if (vSlide.getMinimum() != tPanel.getVSlide().getValueFromCoord(tPanel.getTimingComponent().getLeftEnd())
 					|| vSlide.getMaximum() != tPanel.getVSlide().getValueFromCoord(tPanel.getTimingComponent().getRightEnd()))
 			{
@@ -130,8 +142,8 @@ public class ImageTab extends JPanel
 				vText.setText(min + ":" + sec + ":" + mil); // setting initial values in the textbox
 				iComp.setPosition(vSlide.getCoordfromValue(iComp.getValue()));
 			}
-			System.out.println("VPanelX: " + (vPanel.getX() + ImageTab.this.getX()));
-			System.out.println("VPanelY: " + (ImageTab.this.getY() + ImageTab.this.getParent().getY()));
+// System.out.println("VPanelX: " + (vPanel.getX() + ImageTab.this.getX()));
+// System.out.println("VPanelY: " + (ImageTab.this.getY() + ImageTab.this.getParent().getY()));
 		}
 	}
 
@@ -158,10 +170,10 @@ public class ImageTab extends JPanel
 
 		public void mouseClicked(final MouseEvent arg0)
 		{
-			System.out.println("mouseX: " + arg0.getX() + " mouseY: " + arg0.getY());
-			System.out.println("glassMoveBoxX: " + glass.getMoveBox().getX() + " glassMoveBoxY:" + glass.getMoveBox().getY());
-			System.out.println("glassX: " + glass.getStartX() + " glassY: " + glass.getStartY() + " width: " + glass.getViewWidth()
-					+ " height: " + glass.getViewHeight());
+// System.out.println("mouseX: " + arg0.getX() + " mouseY: " + arg0.getY());
+// System.out.println("glassMoveBoxX: " + glass.getMoveBox().getX() + " glassMoveBoxY:" + glass.getMoveBox().getY());
+// System.out.println("glassX: " + glass.getStartX() + " glassY: " + glass.getStartY() + " width: " + glass.getViewWidth()
+// + " height: " + glass.getViewHeight());
 		}
 
 		public void mouseDragged(final MouseEvent arg0)
@@ -342,12 +354,10 @@ public class ImageTab extends JPanel
 
 		public void mouseEntered(final MouseEvent arg0)
 		{
-
 		}
 
 		public void mouseExited(final MouseEvent arg0)
 		{
-
 		}
 
 		public void mouseMoved(final MouseEvent arg0) // done
@@ -462,15 +472,12 @@ public class ImageTab extends JPanel
 
 	}
 
-	/**
-	 * 
-	 */
 	private static final long				serialVersionUID	= -7564619491742688165L;
 	// Distance from title bar to beginning of the container for VPanel
 	public static int						OFFSETY;
 	// Distance from left border to beginning of the container for VPanel
 	public static int						OFFSETX;
-	// distance from the outside of the glass rectangle to the area for moving or the width or height for resizing it
+	// distance from the outside of the glass rectangle to the area for moving or the minimum width or height for resizing it
 	public static final int					RDIST				= 10;
 	public static final int					WIDTH				= 32;
 	public static final int					HEIGHT				= 24;
@@ -485,6 +492,26 @@ public class ImageTab extends JPanel
 	private ImageComponent					iComp;
 	private boolean							initialized			= false;
 
+	/**
+	 * Constructor that also initializes the glass panel
+	 * 
+	 * @param sFrame -
+	 *            SignLink frame
+	 * @param vComp -
+	 *            VideoComponent
+	 * @param time -
+	 *            time in milliseconds
+	 * @param tTab -
+	 *            TimingTab
+	 * @param glassX -
+	 *            X position
+	 * @param glassY -
+	 *            Y position
+	 * @param glassW -
+	 *            Width
+	 * @param glassH -
+	 *            Height
+	 */
 	protected ImageTab(final SignLink sFrame, final VideoComponent vComp, final int time, final TimingTab tTab, final int glassX,
 			final int glassY, final int glassW, final int glassH)
 	{
@@ -520,6 +547,16 @@ public class ImageTab extends JPanel
 		glass.setEndY(glass.getStartY() + glassH);
 	}
 
+	/**
+	 * Simple Constructor
+	 * 
+	 * @param vComp -
+	 *            VideoComponent
+	 * @param time -
+	 *            time in milliseconds
+	 * @param tTab -
+	 *            TimingTab
+	 */
 	protected ImageTab(final VideoComponent vComp, final int time, final TimingTab tTab)
 	{
 		tPanel = tTab.getTPanel();
@@ -544,11 +581,21 @@ public class ImageTab extends JPanel
 		this.addMouseMotionListener(gListen);
 	}
 
+	/**
+	 * Resets the glass dimensions and positions to the default ones
+	 */
 	protected void clear()
 	{
+		this.setGlassDimensions(0, 0, 160, 120);
 		setInitialized(false);
 	}
 
+	/**
+	 * Sets the time of the preview image
+	 * 
+	 * @param time -
+	 *            time in milliseconds
+	 */
 	protected void setTime(int time)
 	{
 		vPanel.setTimeMiliseconds(time);
@@ -557,6 +604,18 @@ public class ImageTab extends JPanel
 		iComp.setValue(time);
 	}
 
+	/**
+	 * Sets the dimensions and positions of the glass panel on top of the image
+	 * 
+	 * @param glassX -
+	 *            X position
+	 * @param glassY -
+	 *            Y position
+	 * @param glassW -
+	 *            Width
+	 * @param glassH -
+	 *            Height
+	 */
 	protected void setGlassDimensions(final int glassX, final int glassY, final int glassW, final int glassH)
 	{
 		glass.setStartX(glassX + vPanel.getX() + OFFSETX);
@@ -566,6 +625,9 @@ public class ImageTab extends JPanel
 		this.setInitialized(true);
 	}
 
+	/**
+	 * Initializes and adds the components to the Tab
+	 */
 	private void addSliderTextFieldAndButtons()
 	{
 		final JPanel center = new JPanel();
@@ -619,22 +681,17 @@ public class ImageTab extends JPanel
 		center.add(iComp, BorderLayout.SOUTH);
 		center.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-		final ImageIcon frameBackIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/sStepBackward.jpg")));
-		final JButton frameBackButton = new JButton(frameBackIcon);
+		final JButton frameBackButton = new JButton(images.frameBackIcon);
 		frameBackButton.setActionCommand("frame back");
 		frameBackButton.addActionListener(vListen);
 		frameBackButton.setPreferredSize(new Dimension(30, 30));
 		frameBackButton.setBackground(Color.GRAY);
-		final ImageIcon frameForwardIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/sStepForward.jpg")));
-		final JButton frameForwardButton = new JButton(frameForwardIcon);
+		final JButton frameForwardButton = new JButton(images.frameForwardIcon);
 		frameForwardButton.setActionCommand("frame forward");
 		frameForwardButton.addActionListener(vListen);
 		frameForwardButton.setPreferredSize(new Dimension(30, 30));
 		frameForwardButton.setBackground(Color.GRAY);
-		final ImageIcon cameraIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sSetFrame.jpg")));
-		final JButton cameraButton = new JButton("Set Frame", cameraIcon);
+		final JButton cameraButton = new JButton("Set Frame", images.setFrameIcon);
 		cameraButton.setActionCommand("set frame");
 		cameraButton.addActionListener(vListen);
 		cameraButton.setPreferredSize(new Dimension(120, 30));
@@ -657,24 +714,40 @@ public class ImageTab extends JPanel
 	}
 
 	/**
-	 * Method to undo the changes made to the imageTab when the cancel button is pressed
+	 * method that returns the X position of the glass pane over the image
+	 * 
+	 * @return X position
 	 */
-
 	protected int getGlassX()
 	{
 		return glass.getStartX() - vPanel.getX() - OFFSETX;
 	}
 
+	/**
+	 * method that returns the Y position of the glass pane over the image
+	 * 
+	 * @return Y position
+	 */
 	protected int getGlassY()
 	{
 		return glass.getStartY() - OFFSETY - vPanel.getY();
 	}
 
+	/**
+	 * method that returns the width of the glass pane over the image
+	 * 
+	 * @return Width
+	 */
 	protected int getGlassWidth()
 	{
 		return glass.getViewWidth();
 	}
 
+	/**
+	 * method that returns the height of the glass pane over the image
+	 * 
+	 * @return Height
+	 */
 	protected int getGlassHeight()
 	{
 		return glass.getViewHeight();
