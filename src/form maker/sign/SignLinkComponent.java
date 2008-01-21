@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -26,11 +24,13 @@ import javax.swing.border.TitledBorder;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: SignLinkComponent.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: SignLinkComponent.java 94 2007-12-18 21:31:47Z martin $
  *
  */
 public class SignLinkComponent extends JComponent
 {
+	private final SignlinkIcons images = SignlinkIcons.getInstance();
+	
 	private class HelpListener implements ActionListener
 	{
 
@@ -43,12 +43,12 @@ public class SignLinkComponent extends JComponent
 		{
 			if (frame.getHelp() == null)
 			{
-				frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+				frame.setHelp(new HelpFrame(HelpFrame.A8, frame.getHelpLocation()));
 			}
 			else
 			{
 				frame.getHelp().dispose();
-				frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+				frame.setHelp(new HelpFrame(HelpFrame.A8, frame.getHelpLocation()));
 			}
 
 		}
@@ -307,14 +307,14 @@ public class SignLinkComponent extends JComponent
 
 	private void addHelpButton()
 	{
-		final JButton helpButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHelp.jpg"))));
+		final JButton helpButton = new JButton(images.helpImageIcon);
 		helpButton.setActionCommand("help");
 		helpButton.addActionListener(new HelpListener());
 		helpButton.setPreferredSize(new Dimension(22, 22));
 		helpButtonPanel = new JPanel(new FlowLayout());
 		helpButtonPanel.add(Box.createVerticalStrut(250));
 		helpButtonPanel.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
 		this.add(helpButtonPanel, BorderLayout.EAST);
 	}
 
