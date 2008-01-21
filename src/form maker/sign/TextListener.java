@@ -20,7 +20,7 @@ import javax.swing.text.html.HTMLEditorKit;
  * A listener class for text manipulation buttons and menu items
  * 
  * @author Martin Gerdzhev
- * @version $Id: TextListener.java 62 2007-11-15 21:22:18Z martin $
+ * @version $Id: TextListener.java 86 2007-12-04 19:18:33Z martin $
  */
 public class TextListener implements ActionListener, CaretListener
 {
@@ -120,12 +120,12 @@ public class TextListener implements ActionListener, CaretListener
 		{
 			if (frame.getHelp() == null)
 			{
-				frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+				frame.setHelp(new HelpFrame(HelpFrame.A, frame.getHelpLocation()));
 			}
 			else
 			{
 				frame.getHelp().dispose();
-				frame.setHelp(new HelpFrame(HelpFrame.WELCOME, frame.getHelpLocation()));
+				frame.setHelp(new HelpFrame(HelpFrame.A, frame.getHelpLocation()));
 			}
 		}
 	}
