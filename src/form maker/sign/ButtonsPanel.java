@@ -2,9 +2,7 @@ package sign;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -14,24 +12,19 @@ import javax.swing.SwingConstants;
  * A Panel class to hold the top buttons
  * 
  * @author Martin Gerdzhev
- * @version $Id: ButtonsPanel.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: ButtonsPanel.java 92 2007-12-18 18:48:20Z laurel $
  */
 public class ButtonsPanel extends JPanel
 {
-	/**
-	 * 
-	 */
 	private static final long	serialVersionUID	= -7127969993381321380L;
+	
+	private final SignlinkIcons images = SignlinkIcons.getInstance();
+	
 	private JButton				newButton;
-	private ImageIcon			newIcon;
 	private JButton				openButton;
-	private ImageIcon			openIcon;
 	private JButton				saveButton;
-	private ImageIcon			saveIcon;
 	private JButton				exportButton;
-	private ImageIcon			exportIcon;
 	private JButton				exitButton;
-	private ImageIcon			exitIcon;
 
 	public ButtonsPanel(ButtonsListener listen)
 	{
@@ -84,20 +77,15 @@ public class ButtonsPanel extends JPanel
 	 */
 	private void addIcons()
 	{
-		newIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/bFileNew.jpg")));
-		newButton = new JButton(newIcon);
+		newButton = new JButton(images.newImageIcon);
 		newButton.setPreferredSize(new Dimension(40, 40));
-		openIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/bFileOpen.jpg")));
-		openButton = new JButton(openIcon);
+		openButton = new JButton(images.openImageIcon);
 		openButton.setPreferredSize(new Dimension(40, 40));
-		saveIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/bFileSave.jpg")));
-		saveButton = new JButton(saveIcon);
+		saveButton = new JButton(images.saveImageIcon);
 		saveButton.setPreferredSize(new Dimension(40, 40));
-		exportIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/export_icon.jpg")));
-		exportButton = new JButton(exportIcon);
+		exportButton = new JButton(images.exportImageIcon);
 		exportButton.setPreferredSize(new Dimension(40, 40));
-		exitIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/bQuit.jpg")));
-		exitButton = new JButton(exitIcon);
+		exitButton = new JButton(images.quitImageIcon);
 		exitButton.setPreferredSize(new Dimension(40, 40));
 	}
 
