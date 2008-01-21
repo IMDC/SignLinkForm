@@ -2,7 +2,6 @@ package sign;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -22,11 +21,13 @@ import javax.swing.JPanel;
  * This is a frame class for the sign-link editor. It is to hold the menus.
  * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: MenuFrame.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: MenuFrame.java 92 2007-12-18 18:48:20Z laurel $
  */
 public class MenuFrame extends JFrame
 {
+	
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+
 	class WListen extends WindowAdapter
 	{
 		@Override
@@ -38,7 +39,7 @@ public class MenuFrame extends JFrame
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (option == JOptionPane.NO_OPTION)
 				{
-					
+
 				}
 				else if (option == JOptionPane.CANCEL_OPTION)
 				{
@@ -55,11 +56,13 @@ public class MenuFrame extends JFrame
 					MenuFrame.this.setModified(false);
 				}
 			}
+			MenuFrame.this.cleanUp();
 			MenuFrame.this.setVisible(false);
 			MenuFrame.this.dispose();
 			SignUtils.cleanUpAndExit(0);
 		}
 	}
+
 	/**
 	 * 
 	 */
@@ -69,7 +72,7 @@ public class MenuFrame extends JFrame
 	private ButtonsListener		listen;
 	private TextListener		textListen;
 	private SignListener		signListen;
-//	private VideoEditListener	videoListen;
+// private VideoEditListener videoListen;
 	private JMenuBar			bar;
 	private JMenu				file;
 	private JMenu				editText;
@@ -82,7 +85,7 @@ public class MenuFrame extends JFrame
 	private HelpFrame			help;
 	// for resaving a file to check if this is not null and overwrite
 	private File				xmlFile;
-	//whether anything has been modified since last save
+	// whether anything has been modified since last save
 	private boolean				modified;
 
 	/**
@@ -101,9 +104,9 @@ public class MenuFrame extends JFrame
 		final ButtonsPanel bPanel = new ButtonsPanel(listen);
 		this.setSize(WIDTH, HEIGHT);
 		this.setResizable(false);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		sComp = new SignLinkComponent(this);
-		
+
 		textListen = new TextListener(tPanel);
 		signListen = new SignListener(this);
 		vComponent.getVideoButtonsPanel().getVSlide().setSigns(sComp.getSignList());
@@ -118,6 +121,19 @@ public class MenuFrame extends JFrame
 		this.add(center, BorderLayout.CENTER);
 		this.add(sComp, BorderLayout.SOUTH);
 		this.setVisible(true);
+	}
+
+	/**
+	 * method that closes all the quicktime sessions dealing with the currently open video.
+	 */
+	public void cleanUp()
+	{
+		if (SignLink.isInitialized())
+		{
+			SignLink.getInstance(MenuFrame.this).cleanUp();
+		}
+		vComponent.getVideoPanel().dispose();
+		vComponent.getVideoPanel().closeSession();
 	}
 
 	public MenuFrame(final File movieFile, final File xml, final int duration, final int timeScale, final String transcriptText,
@@ -144,43 +160,40 @@ public class MenuFrame extends JFrame
 			}
 			else
 			{
-				QuestionList.getInstance().setVisible(true);
+				WelcomeFrame.getInstance().setVisible(true);
 				this.dispose();
 				return;
 			}
 		}
-		QuestionList.getInstance().dispose();
+		WelcomeFrame.getInstance().dispose();
 		tPanel = new TextPanel(this, transcriptText);
 		listen = new ButtonsListener(this);
 		final ButtonsPanel bPanel = new ButtonsPanel(listen);
 		this.setSize(WIDTH, HEIGHT);
 		this.setResizable(false);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
-//		final ArrayList<Sign> signs = new ArrayList<Sign>();
-//		for (int i = 0; i < signsXML.size(); i++)
-//		{
-//			signs.add(new Sign(this, signsXML.get(i), signs));
-//		}
+		this.setIconImage(images.signEdIcon16);
+
 		if (signsXML.size() > 0)
 			tPanel.getAddTextLinkButton().setEnabled(true);
-		for (int i=0;i<signsXML.size();i++)
+		for (int i = 0; i < signsXML.size(); i++)
 		{
 			vComponent.getVideoPanel().setTimeMiliseconds(signsXML.get(i).getFTime());
-			signsXML.get(i).setPreview(new ImageIcon(vComponent.getVideoPanel().getImage(signsXML.get(i).getX(), signsXML.get(i).getY(), signsXML.get(i).getWidth(), signsXML.get(i).getHeight()).getImage().getScaledInstance(90, 70, 0)));
+			signsXML.get(i).setPreview(
+					new ImageIcon(vComponent.getVideoPanel().getImage(signsXML.get(i).getX(), signsXML.get(i).getY(),
+							signsXML.get(i).getWidth(), signsXML.get(i).getHeight()).getImage().getScaledInstance(90, 70, 0)));
 		}
 		vComponent.getVideoPanel().setTimeMiliseconds(0);
 		sComp = new SignLinkComponent(this, signsXML);
 
 		textListen = new TextListener(tPanel);
 		signListen = new SignListener(this);
-//		videoListen = new VideoEditListener();
+// videoListen = new VideoEditListener();
 		vComponent.getVideoButtonsPanel().getVSlide().setSigns(sComp.getSignList());
 		this.createMenus();
 		final JPanel center = new JPanel();
 		center.add(vComponent);
 		center.add(Box.createHorizontalStrut(21));
 		center.add(tPanel);
-//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addWindowListener(new WListen());
 		this.setLayout(new BorderLayout());
 		this.add(bPanel, BorderLayout.NORTH);
@@ -312,13 +325,13 @@ public class MenuFrame extends JFrame
 		file = createFileMenu();
 		editText = createEditTextMenu();
 		signLinks = createSignLinksMenu();
-		video = createVideoMenu();
+		// video = createVideoMenu();
 		aslWeb = createAslWebMenu();
 
 		bar.add(file);
 		bar.add(editText);
 		bar.add(signLinks);
-		bar.add(video);
+		// bar.add(video);
 		bar.add(aslWeb);
 	}
 
@@ -384,8 +397,7 @@ public class MenuFrame extends JFrame
 		/*
 		 * adds listeners to the menu items
 		 */
-		//editVideo.addActionListener(videoListen);
-
+		// editVideo.addActionListener(videoListen);
 		return videoMenu;
 	}
 
@@ -513,6 +525,7 @@ public class MenuFrame extends JFrame
 
 	/**
 	 * Getter method to return the value of modified
+	 * 
 	 * @return the modified
 	 */
 	public boolean isModified()
@@ -522,7 +535,9 @@ public class MenuFrame extends JFrame
 
 	/**
 	 * Setter method to set the value of modified
-	 * @param modified the value to set
+	 * 
+	 * @param modified
+	 *            the value to set
 	 */
 	public void setModified(boolean modified)
 	{
