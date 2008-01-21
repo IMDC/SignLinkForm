@@ -6,26 +6,22 @@ package sign;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
  * @author Martin Gerdzhev
  * 
- * @version $Id: ImageComponent.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: ImageComponent.java 92 2007-12-18 18:48:20Z laurel $
  */
 public class ImageComponent extends JPanel
 {
-	/**
-	 * 
-	 */
+
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+	
 	private static final long	serialVersionUID	= -8748584304199515978L;
 	private static final int	IMAGEWIDTH			= 12;
 	private static final int	IMAGEHEIGHT			= 12;
-	private final ImageIcon		cameraIcon			= new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-															this.getClass().getResource("/icons/sSetFrame.jpg")));
 	private int					position;
 	private int					value;
 	/**
@@ -64,7 +60,7 @@ public class ImageComponent extends JPanel
 	{
 		super.paintComponent(g);
 		g.fillPolygon(new int[] { position, position + IMAGEWIDTH / 2, position + IMAGEWIDTH }, new int[] { 5, 0, 5 }, 3);
-		g.drawImage(cameraIcon.getImage(), position, 5, IMAGEWIDTH, IMAGEHEIGHT, this);
+		g.drawImage(images.setFrameIcon.getImage(), position, 5, IMAGEWIDTH, IMAGEHEIGHT, this);
 	}
 
 	/**
@@ -84,52 +80,4 @@ public class ImageComponent extends JPanel
 		this.value = value;
 	}
 	
-//	protected void commitChanges()
-//	{
-//		this.setTempPosition(this.getPosition());
-//		this.setTempValue(this.getValue());
-//	}
-//	
-//	protected void rollbackChanges()
-//	{
-//		position = this.getTempPosition();
-//		this.setValue(this.getTempValue());
-//	}
-
-	/**
-	 * Getter method to return the value of tempValue
-	 * @return the tempValue
-	 */
-//	public int getTempValue()
-//	{
-//		return this.tempValue;
-//	}
-
-	/**
-	 * Setter method to set the value of tempValue
-	 * @param tempValue the value to set
-	 */
-//	public void setTempValue(int tempValue)
-//	{
-//		this.tempValue = tempValue;
-//	}
-
-	/**
-	 * Getter method to return the value of tempPosition
-	 * @return the tempPosition
-	 */
-//	public int getTempPosition()
-//	{
-//		return this.tempPosition;
-//	}
-
-	/**
-	 * Setter method to set the value of tempPosition
-	 * @param tempPosition the value to set
-	 */
-//	public void setTempPosition(int tempPosition)
-//	{
-//		this.tempPosition = tempPosition;
-//	}
-
 }
