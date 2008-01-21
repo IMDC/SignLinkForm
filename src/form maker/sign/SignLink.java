@@ -3,7 +3,6 @@ package sign;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -25,20 +24,19 @@ import javax.swing.JTabbedPane;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: SignLink.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: SignLink.java 94 2007-12-18 21:31:47Z martin $
  */
 public class SignLink extends JFrame implements ActionListener, WindowListener
 {
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+
 	private static final long		serialVersionUID		= 3459041326973073778L;
 	private static final int		WIDTH					= 395;
 	private static final int		HEIGHT					= 630;
 	private final JTabbedPane		tabs;
 	private JButton					doneButton;
 	private JButton					cancelButton;
-	private final ImageIcon			underPreviewIcon		= new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-																	this.getClass().getResource("/icons/images/redlink.gif")).getScaledInstance(
-																	90, 20, 0));
-	private final JLabel			underPreviewIconLabel	= new JLabel(underPreviewIcon);
+	private final JLabel			underPreviewIconLabel	= new JLabel(images.redLinkIcon);
 	private final LinkAddressTab	addressTab;
 	private final TimingTab			timingTab;
 	private final ImageTab			imageTab;
@@ -52,11 +50,13 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 	private String					helpFile;
 	private Sign					sign;
 	private static SignLink			instance;
+	private static boolean			initialized = false;
 
 	public synchronized static SignLink getInstance(MenuFrame mFrame)
 	{
 		if (instance == null)
 		{
+			SignLink.setInitialized(true);
 			System.out.println("Initializing values for first time");
 			instance = new SignLink(mFrame);
 		}
@@ -72,6 +72,7 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 	{
 		if (instance == null)
 		{
+			SignLink.setInitialized(true);
 			System.out.println("Initializing values for first time");
 			instance = new SignLink(mFrame, signInfo, signs);
 		}
@@ -124,7 +125,7 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 		north.add(addressTab, BorderLayout.CENTER);
 		this.add(north, BorderLayout.NORTH);
 		this.add(tabs);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		addButtons();
 		this.setSize(WIDTH, HEIGHT);
 		this.setResizable(false);
@@ -170,7 +171,7 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 		north.add(addressTab, BorderLayout.CENTER);
 		this.add(north, BorderLayout.NORTH);
 		this.add(tabs);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		addButtons();
 		this.setSize(WIDTH, HEIGHT);
 		this.setResizable(false);
@@ -202,7 +203,6 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 		timingTab.setTime(signInfo.getFTime());
 		imageTab.setTime(signInfo.getFTime());
 		tabs.setSelectedIndex(0);
-		System.out.println("Glass Dimensions:" +signInfo.getX()+" "+ signInfo.getY()+" "+ signInfo.getWidth()+" "+ signInfo.getHeight());
 		sign.setPreview(new ImageIcon(this.getImage(signInfo.getX(), signInfo.getY(), signInfo.getWidth(), signInfo.getHeight()).getImage()
 				.getScaledInstance(90, 70, 0)));
 		this.setPreview(sign.getPreview());
@@ -221,7 +221,6 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 		glass = new GlassPanel();
 		this.setGlassPane(glass);
 		sign = new Sign();
-		sign.setPreview(new ImageIcon(this.getImage(0, 0, 160, 120).getImage().getScaledInstance(90, 70, 0)));
 		sign.setX(0);
 		sign.setY(0);
 		sign.setWidth(VideoPanel.WIDTH);
@@ -242,22 +241,21 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 	 */
 	private void addButtons()
 	{
-		doneButton = new JButton("Done", new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sOK-Done.jpg"))));
-		cancelButton = new JButton("Cancel", new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sCancel.jpg"))));
+		doneButton = new JButton("Done", images.doneIcon);
+		cancelButton = new JButton("Cancel", images.cancelIcon);
 		doneButton.addActionListener(this);
 		cancelButton.addActionListener(this);
 		doneButton.setActionCommand("done");
 		cancelButton.setActionCommand("cancel");
 
-		final JButton helpButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHelp.jpg"))));
+		final JButton helpButton = new JButton(images.helpImageIcon);
 		helpButton.setActionCommand("help");
 		helpButton.addActionListener(this);
 		helpButton.setPreferredSize(new Dimension(22, 22));
 
 		final JPanel south = new JPanel();
 		south.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
 		south.add(Box.createHorizontalStrut(170));
 		south.add(doneButton);
 		south.add(cancelButton);
@@ -313,7 +311,14 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 		this.invalidate();
 		this.validate();
 	}
-
+	
+	protected void cleanUp()
+	{
+		iComponent.getVideoPanel().dispose();
+		tComponent.getVideoPanel().dispose();
+		iComponent.getVideoPanel().closeSession();
+		tComponent.getVideoPanel().closeSession();
+	}
 	/**
 	 * Getter method to return the value of sign
 	 * 
@@ -470,6 +475,24 @@ public class SignLink extends JFrame implements ActionListener, WindowListener
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	/**
+	 * Getter method to return the value of initialized
+	 * @return the initialized
+	 */
+	public static boolean isInitialized()
+	{
+		return initialized;
+	}
+
+	/**
+	 * Setter method to set the value of initialized
+	 * @param initialized the value to set
+	 */
+	public static void setInitialized(boolean initialized)
+	{
+		SignLink.initialized = initialized;
 	}
 
 }
