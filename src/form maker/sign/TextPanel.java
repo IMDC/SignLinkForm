@@ -3,10 +3,8 @@ package sign;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -20,15 +18,15 @@ import javax.swing.text.html.HTMLDocument;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: TextPanel.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: TextPanel.java 94 2007-12-18 21:31:47Z martin $
  *
  */
 public class TextPanel extends JPanel
 {
-	/**
-	 * 
-	 */
 	private static final long	serialVersionUID	= -8816004196947731916L;
+	
+	private final SignlinkIcons images = SignlinkIcons.getInstance();
+	
 	private TextComponent		textComp;
 	private JButton				addTextLinkButton;
 	private JButton				clearTextLinkButton;
@@ -90,8 +88,7 @@ public class TextPanel extends JPanel
 		clearTextLinkButton.addActionListener(listen);
 		clearTextLinkButton.setEnabled(false);
 
-		final JButton helpButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHelp.jpg"))));
+		final JButton helpButton = new JButton(images.helpImageIcon);
 		helpButton.setActionCommand("help");
 		helpButton.addActionListener(listen);
 		helpButton.setPreferredSize(new Dimension(22, 22));
@@ -101,6 +98,7 @@ public class TextPanel extends JPanel
 		south.add(clearTextLinkButton);
 		south.add(Box.createRigidArea(new Dimension(130, 24)));
 		south.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
 		optional.add(south, BorderLayout.SOUTH);
 	}
 
