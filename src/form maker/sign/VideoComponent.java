@@ -2,10 +2,8 @@ package sign;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.File;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
@@ -16,7 +14,7 @@ import javax.swing.border.TitledBorder;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoComponent.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: VideoComponent.java 94 2007-12-18 21:31:47Z martin $
  */
 public class VideoComponent extends JComponent
 {
@@ -24,6 +22,7 @@ public class VideoComponent extends JComponent
 	 * 
 	 */
 	private static final long	serialVersionUID	= 5269734684510730896L;
+	private SignlinkIcons images = SignlinkIcons.getInstance();
 	private VideoPanel			vPanel;
 	private VideoButtonsPanel	vButtonsPanel;
 	private final VideoListener	vListen;
@@ -31,7 +30,7 @@ public class VideoComponent extends JComponent
 
 	public VideoComponent()
 	{
-		imageLabel = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/icon_bar_lower.gif"))));
+		imageLabel = new JLabel(images.iconBarLowerIcon);
 		imageLabel.setVisible(false);
 		imageLabel.setPreferredSize(new Dimension(320, 15));
 		vListen = new VideoListener(this);
@@ -51,7 +50,7 @@ public class VideoComponent extends JComponent
 	 */
 	public VideoComponent(final File file)
 	{
-		imageLabel = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/icon_bar_lower.gif"))));
+		imageLabel = new JLabel(images.iconBarLowerIcon);
 		imageLabel.setVisible(false);
 		imageLabel.setPreferredSize(new Dimension(320, 15));
 		vListen = new VideoListener(this);
