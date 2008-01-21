@@ -21,7 +21,7 @@ import javax.swing.text.html.HTMLEditorKit;
  * A class that is to be the text pane for the optional text and links
  * 
  * @author Martin Gerdzhev
- * @version $Id: TextComponent.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: TextComponent.java 105 2008-01-15 16:29:37Z martin $
  */
 public class TextComponent extends JTextPane
 {
@@ -122,6 +122,22 @@ public class TextComponent extends JTextPane
 					{
 						// FIXME To fix the space -> remove link add a space after word, go back one space and reinsert link and set caret
 						// again
+						System.out.println("Insert space should work here");
+						try
+						{
+							((HTMLDocument) TextComponent.this.getStyledDocument()).insertAfterEnd(elem, "\u0020");
+						}
+						catch (BadLocationException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 // AttributeSet attribute = it.getAttributes();
 // System.out.println("Attribute id: " + attribute.getAttribute(HTML.Attribute.ID).toString());
 // // String text = TextComponent.this.getText();
