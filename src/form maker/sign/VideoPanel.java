@@ -34,13 +34,14 @@ import quicktime.std.movies.Movie;
 import quicktime.std.movies.MovieController;
 import quicktime.std.movies.media.DataRef;
 import quicktime.util.QTHandle;
+import quicktime.util.QTUtils;
 
 /**
  * A class that opens and manipulates a Quicktime video
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoPanel.java 52 2007-11-08 03:56:17Z martin $
+ * @version $Id: VideoPanel.java 81 2007-11-29 20:20:18Z martin $
  */
 public class VideoPanel extends JPanel
 {
@@ -149,6 +150,7 @@ public class VideoPanel extends JPanel
 		try
 		{
 			QTSession.close();
+			QTUtils.reclaimMemory();
 		}
 		catch (final Exception e)
 		{
