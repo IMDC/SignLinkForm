@@ -8,7 +8,6 @@
 	import flash.events.Event;
 	import flash.text.TextField;
 	
-	
 	/* Default framerate will be 15 fps */
 	[SWF(width="565", height="425", frameRate="15", backgroundColor="#AAAAAA")]
 	
@@ -56,171 +55,49 @@
 		
 		private var video			:FlvPlayer;
 		private var videoController	:VideoController;
-		public var controlBar		:Sprite;
-		//private var times			:Array;
+		private var xmlData			:XMLData;
+		
+		public var controlBar		:Sprite;	// movie control: play, pause, etc
 		private var playerBCK		:Sprite;
 		public var linkIndicator	:Bitmap;	// (red) frame behind the player
+		
 		public var leftControlBar	:Sprite;
 		public var nextButt			:Sprite;
 		public var prevButt			:Sprite;
 		public var slowButt			:Sprite;
 		public var aslpahButt		:Sprite;
 		public var textButt			:Sprite;
-		private var xmlData			:XMLData;
+		
 		public var field			:TextField = new TextField();
+		
 		public var linksHolder		:Sprite;
 		private var signLinksArray	:Array;
-		public var leftArrow		:Sprite;
-		public var rightArrow		:Sprite;
-		private var xOffSet			:int = 31;
-		public var shiftIndex		:int;		// the leftmost visible link after shift
+		public var leftArrow		:Sprite; 	//shift left	
+		public var rightArrow		:Sprite;	//shift right
+		private var xOffSet			:int = 31;	//signLinks offset
+		public var shiftIndex		:int;		//the leftmost visible link after the shift
+		
+		private var debugEnabled	:Boolean = false;
 		public var debugTA			:TextField = new TextField();
-		private var debugEnabled	:Boolean = true;
-		public var currentSL		:int = 0;
 		
 		public function Main()
 		{
-			this.initialize();
-		}
-				
-		public function initialize():void
-		{
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.align=StageAlign.TOP_LEFT;
-
+			stage.scaleMode	= StageScaleMode.NO_SCALE;
+			stage.align		= StageAlign.TOP_LEFT;
 			xmlData 		= new XMLData();
-			controlBar		= new ControlBar();
+			controlBar		= new ControlBar(); 
 			linkIndicator 	= new LinkIndicator();
-			//thumbnailLink	= new ThumbNailLink();
-			signLinksArray	= new Array(xmlData.getNumLinks());
-			shiftIndex = 0;
 			
-			initializeTrack();
+			signLinksArray 	= new Array(xmlData.getNumLinks());
+			shiftIndex 		= 0;
 			
-			/* adds the player's control bar to the stage */
-			this.addChild(controlBar);
-			controlBar.x = 31;
-			controlBar.y = 268;
-			
-			/* sets up the control bar on the left */
-			leftControlBar = new Sprite();
-			leftControlBar.graphics.lineStyle(1,0xAAAAAA);
-			leftControlBar.graphics.beginFill(0xAAAAAA);
-			leftControlBar.graphics.drawRect(0,0,31,320);
-			leftControlBar.graphics.endFill();
-			this.addChild(leftControlBar);
-
-			nextButt	= new NextButton();		nextButt.buttonMode = true;
-			prevButt	= new PreviousButton();	prevButt.buttonMode = true;
-			slowButt 	= new SlowButton();		slowButt.buttonMode = true;
-			aslpahButt 	= new ASLpahButton();	aslpahButt.buttonMode = true;
-			textButt 	= new TextButton();		textButt.buttonMode = true;
-
-			leftControlBar.addChild(prevButt);
-			prevButt.x = 4;
-			prevButt.y = 10;
-
-			leftControlBar.addChild(nextButt);
-			nextButt.x = 4;
-			nextButt.y = 35;
-
-			leftControlBar.addChild(slowButt);
-			slowButt.x = 4;
-			slowButt.y = 70;
-
-			leftControlBar.addChild(aslpahButt);
-			aslpahButt.x = 4;
-			aslpahButt.y = 100;
-
-			leftControlBar.addChild(textButt);
-			textButt.x = 4;
-			textButt.y = 130;
-
-			/* sets up the player's background: black initially */
-			playerBCK = new Sprite();
-			playerBCK.graphics.lineStyle(1,0x000000);
-			playerBCK.graphics.beginFill(0x000000);
-			playerBCK.graphics.drawRect(0,0,325,263);
-			playerBCK.graphics.endFill();
-			this.addChild(playerBCK);
-			playerBCK.x = 31;
-			playerBCK.y = 0;
-			
-			playerBCK.addChildAt(linkIndicator,0);
-			linkIndicator.x = 0;
-			linkIndicator.y = 0;
-			linkIndicator.visible = false;		
-
-			/* sets up the holder and navigational arrows for "SignLinks" 
-			 * height: 120, width: 357, usable: 357-xOffSet = 326
-			 * set arrows
-			 */			
-			linksHolder = new Sprite();
-			linksHolder.graphics.lineStyle(2,0xCCCCCC);
-			linksHolder.graphics.beginFill(0xCCCCCC);
-			linksHolder.graphics.drawRect(0,0,357,120);
-			linksHolder.graphics.endFill();
-			
-			this.addChild(linksHolder);
-			linksHolder.x = 0;
-			linksHolder.y = 290;			
- 
-			leftArrow  = new LeftButton(); 	leftArrow.buttonMode = true; 	leftArrow.useHandCursor = true;
-			rightArrow = new RightButton();	rightArrow.buttonMode = true;	rightArrow.useHandCursor = true;
-			
-			leftArrow.x = 3;	leftArrow.y = 100;
-			rightArrow.x = 333;	rightArrow.y = 100;
-			
-			linksHolder.addChild(leftArrow);
-			linksHolder.addChild(rightArrow);
-			
-			leftArrow.x = xOffSet + 1;	leftArrow.y = 5;
-			rightArrow.x = 357-15-1;	rightArrow.y = 5;
-			
-			linksHolder.addChild(leftArrow);
-			linksHolder.addChild(rightArrow);
-
-			
-			this.addSL();
-			
-			//videoController = new VideoController(xmlData.getMovieName(), xmlData.getTimesArray()); //use this later with ffmpeg to output the flv file
-			videoController = new VideoController(xmlData.getMovieName(), xmlData.getTimesArray());
-			playerBCK.addChild(videoController);
-
-			/* sets up the textbox on the right */
-			this.addChild(field); // field is the textfield
-			field.x 				= 360;
-			field.y 				= 0;
-			field.width 			= 200;
-			field.height 			= 285;
-			field.multiline 		= true;
-			field.border 			= true;
-			field.borderColor 		= 0xAAAAAA;	//make the border gray
-			field.background 		= true;
-			field.backgroundColor 	= 0xCCCCCC;	//make the background lighter gray
-			field.htmlText			= xmlData.getHtmlText();
-			field.visible = false;
-		}
-		
-		/* gets the "SignLinks" and adds them on stage */
-		private function addSL():void
-		{
-			for (var i:int=0; i<xmlData.getNumLinks(); i++)	// i=0..4
-			{
-				/*	SignLink(thumb:Bitmap, sTime:Number, eTime:Number, link:String, linkLabel:String="") */
-				signLinksArray[i] = new SignLink(xmlData.getImagesArray()[i],xmlData.getTimesArray()[2*i],xmlData.getTimesArray()[2*i+1],xmlData.getLinksArray()[i],xmlData.getLabelsArray()[i]);
-				signLinksArray[i].setSLinkID(i);
-				linksHolder.addChild(signLinksArray[i]);
-				
-				if(i > 2)
-				{
-					signLinksArray[i].visible = false;
-				}
-				signLinksArray[i].x = xOffSet+17;
-				signLinksArray[i].y = 5;				
-				xOffSet+=98;
-				//currentSL
-			}
+			this.initializeTrack();		
+			this.initLeftControlBar();
+			this.initPlayerStage();
+			this.initPlayerControlBar();
+			this.initSLHolder(); 		//height: 120, width: 357, usable: 357-xOffSet = 326			
+			this.initSignLinks();			
+			if (!debugEnabled){ this.initTextBox(); }		//enable it when not debug
 		}
 		
 		// debugging function
@@ -236,11 +113,20 @@
 				debugTA.width = 200;
 				debugTA.multiline = true;
 				debugTA.replaceSelectedText(debugText + "\n");
-				//debugTA.appendText(debugText+"\n");
 				this.addChild(debugTA);
 			}
 		}
 		
+		public function toggleText(bool:Boolean):void
+		{
+			for (var i:int=0; i<xmlData.getNumLinks(); i++)
+			{				
+				signLinksArray[i].toggleSLText(bool);
+				//signLinksArray[i].slText = i.toString() + " of " + xmlData.getNumLinks().toString();
+			}
+		}
+
+		/* ************************** SHIFTING FUNCTIONS ************************** */
 		public function shiftToStart():void
 		{
 			xOffSet = 31;
@@ -277,13 +163,31 @@
 		
 		public function shiftToMiddle(curIndex:int):void
 		{
-			if (curIndex == shiftIndex+1) { debug("shiftIndex + 1 = curIndex = " + curIndex); return;}
-			else if (curIndex == shiftIndex) 
+			//debug("current: " + curIndex.toString() + " shift: " + shiftIndex.toString());
+			
+			// handles signLinks to the left of stage
+			if(curIndex <= shiftIndex-1)
 			{
+				//debug("curIndex <= shiftIndex-1");
+				shiftLeft(); return;
+			}
+			// handles signLinks to the right of stage			
+			else if (curIndex > shiftIndex+2)
+			{
+				//debug("curIndex > shiftIndex+2");
+				shiftRight();
+			}
+			
+			// handles the 3 signLinks on stage
+			if ((curIndex == shiftIndex+1) ) {return;}
+			else if ((curIndex == shiftIndex) )
+			{
+				//debug("curIndex == shiftIndex");
 				shiftLeft(); return;
 			}
 			else if (curIndex == shiftIndex+2) 
 			{
+				//debug("curIndex == shiftIndex+2");
 				shiftRight(); return;
 			}
 		}
@@ -295,7 +199,7 @@
 			if(shiftIndex <= 0){ return; }
 			if(shiftIndex > 0)
 			{
-				shiftIndex--;
+				shiftIndex--; //debug("shiftLeft: " + shiftIndex.toString());
 				for (var i:int=0; i<xmlData.getNumLinks(); i++)
 				{				
 					// hide all signlinks on the left
@@ -309,7 +213,7 @@
 					}
 				} // for loop 				
 			}
-			debug("Shift Left: " + shiftIndex.toString());
+			//debug("Shift Left: " + shiftIndex.toString());
 		}
 		
 		public function shiftRight():void
@@ -321,7 +225,7 @@
 			if(shiftIndex+1 > xmlData.getNumLinks() - 3){ return; }
 			if(shiftIndex+1 <= xmlData.getNumLinks() - 3)
 			{
-				shiftIndex++;
+				shiftIndex++; //debug("shiftRight: " + shiftIndex.toString());
 				for (var i:int=0; i < xmlData.getNumLinks(); i++)
 				{				
 					// hide all signlinks on the left
@@ -335,13 +239,159 @@
 					}
 				}
 			}
-			debug("Shift Right: " + shiftIndex.toString());
+			//debug("Shift Right: " + shiftIndex.toString());
+		}		
+		
+		/* ************************** SHIFTING FUNCTIONS ************************** */	
+
+		/* sets up the player's control bar (play, pause, etc) */
+		private function initPlayerControlBar():void 
+		{
+			controlBar.useHandCursor = true;
+			controlBar.buttonMode = true;
+			this.addChild(controlBar); 
+			controlBar.x = 30.5; 
+			controlBar.y = 267;
 		}
 		
-		public function getSignLinksArray():Array{
+		/* sets up the textbox on the right */
+		private function initTextBox():void
+		{
+			this.addChild(field); // field is the textfield
+			field.x 				= 360;
+			field.y 				= 0;
+			field.width 			= 200;
+			field.height 			= 413;
+			field.multiline 		= true;
+			field.border 			= true;
+			field.borderColor 		= 0xAAAAAA;	//make the border gray
+			field.background 		= true;
+			field.backgroundColor 	= 0xDDDDDD;	//make the background lighter gray
+			field.htmlText			= xmlData.getHtmlText();
+			if (!debugEnabled){
+				field.visible 			= true;
+			}
+		}
+		
+		/* sets up the holder and shifting arrows */
+		private function initSLHolder():void
+		{
+			linksHolder = new Sprite();
+			linksHolder.graphics.lineStyle(2,0xAAAAAA);
+			linksHolder.graphics.beginFill(0xAAAAAA);
+			linksHolder.graphics.drawRect(0,0,357,120);
+			linksHolder.graphics.endFill();
+			
+			this.addChild(linksHolder);
+			linksHolder.x = 0;
+			linksHolder.y = 290;			
+ 
+			leftArrow  = new LeftButton(); 	leftArrow.buttonMode = true; 	leftArrow.useHandCursor = true;
+			rightArrow = new RightButton();	rightArrow.buttonMode = true;	rightArrow.useHandCursor = true;
+			
+			linksHolder.addChild(leftArrow);
+			linksHolder.addChild(rightArrow);
+			
+			leftArrow.x = xOffSet + 0.5;	leftArrow.y = 2;
+			rightArrow.x = 357-15-1;	rightArrow.y = 2;
+			
+			linksHolder.addChild(leftArrow);
+			linksHolder.addChild(rightArrow);
+			//debug("sl holder inited");
+		}
+		
+		/* sets up the player's background, position and link indicator */
+		private function initPlayerStage():void
+		{
+			playerBCK = new Sprite();
+			playerBCK.graphics.lineStyle(1,0x000000);
+			playerBCK.graphics.beginFill(0x000000);
+			playerBCK.graphics.drawRect(0,0,325,263);
+			playerBCK.graphics.endFill();
+			
+			//videoController = new VideoController(xmlData.getMovieName(), xmlData.getTimesArray()); //use this later with ffmpeg to output the flv file
+			videoController = new VideoController(xmlData.getMovieName(), xmlData.getTimesArray());
+			playerBCK.addChild(videoController);
+			
+			this.addChild(playerBCK);
+			playerBCK.x = 31;
+			playerBCK.y = 0;
+			
+			playerBCK.addChildAt(linkIndicator,0);
+			linkIndicator.x = 0;
+			linkIndicator.y = 0;
+			linkIndicator.visible = false;		
+		}
+		
+		/* sets up the control bar on the left */
+		private function initLeftControlBar():void
+		{
+			leftControlBar = new Sprite();
+			leftControlBar.graphics.lineStyle(1,0xAAAAAA);
+			leftControlBar.graphics.beginFill(0xAAAAAA);
+			leftControlBar.graphics.drawRect(0,0,31,320);
+			leftControlBar.graphics.endFill();
+			this.addChild(leftControlBar);
+
+			nextButt	= new NextButton();		nextButt.buttonMode = true;
+			prevButt	= new PreviousButton();	prevButt.buttonMode = true;
+			slowButt 	= new SlowButton();		slowButt.buttonMode = true;
+			aslpahButt 	= new ASLpahButton();	aslpahButt.buttonMode = true;
+			textButt 	= new TextButton();		textButt.buttonMode = true;
+
+			leftControlBar.addChild(prevButt);
+			prevButt.x = 4; prevButt.y = 10;
+
+			leftControlBar.addChild(nextButt);
+			nextButt.x = 4; nextButt.y = 42;
+
+			leftControlBar.addChild(slowButt);
+			slowButt.x = 4; slowButt.y = 75;
+			
+			leftControlBar.addChild(textButt);
+			textButt.x = 4; textButt.y = 108;
+
+			leftControlBar.addChild(aslpahButt);
+			aslpahButt.x = 4; aslpahButt.y = 241;			
+		}
+		
+		/* gets the sign links and adds them on stage */
+		private function initSignLinks():void
+		{
+			for (var i:int=0; i<xmlData.getNumLinks(); i++)	// i=0..4
+			{
+				/*	SignLink(thumb:Bitmap, sTime:Number, eTime:Number, link:String, linkLabel:String="") */
+				signLinksArray[i] = new SignLink(xmlData.getImagesArray()[i],xmlData.getTimesArray()[2*i],xmlData.getTimesArray()[2*i+1],xmlData.getLinksArray()[i],xmlData.getLabelsArray()[i]);
+				signLinksArray[i].setSLinkID(i);
+				signLinksArray[i].slText = (i+1).toString() + " of " + xmlData.getNumLinks().toString();
+				linksHolder.addChild(signLinksArray[i]);
+				
+				if(i > 2)
+				{
+					signLinksArray[i].visible = false;
+				}
+				signLinksArray[i].x = xOffSet+17;
+				signLinksArray[i].y = 2;				
+				xOffSet+=98;
+			}
+		}
+		
+		public function initializeTrack():void
+		{
+			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.lineStyle();
+			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.beginFill(0xbbbbbb);
+			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.drawRect(0,0,(controlBar.getChildByName("density") as MovieClip).slider.track.width,(controlBar.getChildByName("density") as MovieClip).slider.track.height);
+			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.endFill();
+			trace((controlBar.getChildByName("density") as MovieClip).slider.track);//.slider.track.height);
+		}
+		
+		public function getSignLinksArray():Array
+		{
 			return signLinksArray;
 		}		
-		public function getVController():VideoController{
+		
+		public function getVController():VideoController
+		{
 			return videoController;
 		}
 		
@@ -359,15 +409,6 @@
 			}
 			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.drawRect(x,1,width-1,(controlBar.getChildByName("density") as MovieClip).slider.track.height-2);
 			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.endFill();
-		}
-		
-		public function initializeTrack():void
-		{
-			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.lineStyle();
-			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.beginFill(0xbbbbbb);
-			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.drawRect(0,0,(controlBar.getChildByName("density") as MovieClip).slider.track.width,(controlBar.getChildByName("density") as MovieClip).slider.track.height);
-			(controlBar.getChildByName("density")  as  MovieClip).slider.track.graphics.endFill();
-			trace((controlBar.getChildByName("density") as MovieClip).slider.track);//.slider.track.height);
 		}
 	}//Main class
 }//package

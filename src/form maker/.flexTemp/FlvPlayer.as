@@ -20,17 +20,17 @@
 		private var timer		:Timer;
 		private var duration	:Number;
 		private var flvUrl		:String;
-		private var autoPlay	:Boolean;
+		private var isAutoPlay	:Boolean;
 		private var playing		:Boolean;
 
-		public function FlvPlayer(url:String,auto:Boolean=false):void
+		public function FlvPlayer(url:String, auto:Boolean=false):void
 		{
-			autoPlay	= auto;
+			isAutoPlay	= auto;
 			playing		= auto;
 			duration	= 0;
 			flvUrl		= url;
 			connection	= new NetConnection;
-			connection.addEventListener(NetStatusEvent.NET_STATUS,onNetStatus);
+			connection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus, false, 0, true);
 			connection.connect(null);
 		}
 		
@@ -45,22 +45,23 @@
 					trace("Unable to locate video: " + flvUrl);
 					break;
 				case "NetStream.Play.Start" :
+					//stream.play(flvUrl);
 					stream.seek(0);					
-					if (!autoPlay){ this.pause(); }
+					if (!isAutoPlay){ stream.pause(); }
 					break;
 				case "NetStream.Play.Stop" :
-					stream.pause();
+					stream.dispatchEvent(new Event("end of video"));
 					stream.seek(0);
-					this.dispatchEvent(new Event("end of video"));
+					stream.pause();					
 					break;
 			}
 		}
 		
-		public function connectStream():void
+		private function connectStream():void
 		{
 			stream = new NetStream(connection);
-			stream.addEventListener(NetStatusEvent.NET_STATUS,onNetStatus);
-			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
+			stream.addEventListener(NetStatusEvent.NET_STATUS,onNetStatus, false, 0, true);
+			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler, false, 0, true);
 
 			var client:Object	= new Object;
 			client.onMetaData	= onMetaData;
@@ -70,7 +71,7 @@
 			video.attachNetStream(stream);
 
 			addChild(video);
-			stream.play(flvUrl);
+			this.playFlv();
 		}
 		
 		private function onMetaData(data:Object):void
@@ -79,10 +80,9 @@
 			this.dispatchEvent(new Event("videoLoaded"));
 		}	
 		
-		public function playFlv():void
+		private function playFlv():void
 		{
 			stream.play(flvUrl);
-			//stream.resume();
 			playing = true;
 		}
 
@@ -97,29 +97,36 @@
 			stream.pause();
 			playing = false;
 		}
+		
 		public function resume():void
 		{
 			stream.resume();
 			playing = true;
 		}
+		
 		public function seek(time:Number):void
 		{
 			stream.seek(time);
-			playing = false;
+			playing = true;	// why was it false???
 		}
+		
 		public function getTime():Number
 		{
 			return stream.time;
 		}
+		
 		public function getDuration():Number
 		{
 			return duration;
 		}
+		
 		public function isPlaying():Boolean
 		{
 			return playing;
 		}
-		private function asyncErrorHandler(event:AsyncErrorEvent):void {
+		
+		private function asyncErrorHandler(event:AsyncErrorEvent):void 
+		{
             // ignore AsyncErrorEvent events.
         }
 	}
