@@ -2,11 +2,9 @@ package sign;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -15,22 +13,20 @@ import javax.swing.JPanel;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: SignButtonsPanel.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: SignButtonsPanel.java 94 2007-12-18 21:31:47Z martin $
  */
 public class SignButtonsPanel extends JPanel
 {
+	
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 8315662119657713534L;
+	private SignlinkIcons images = SignlinkIcons.getInstance();
 	private JButton				newSignLinkButton;
-	private ImageIcon			newSignLinkIcon;
 	private JButton				editPropertiesButton;
-	private ImageIcon			editPropertiesIcon;
 	private JButton				previewButton;
-	private ImageIcon			previewIcon;
 	private JButton				deleteButton;
-	private ImageIcon			deleteIcon;
 	private final MenuFrame		menuFrame;
 
 	/**
@@ -87,33 +83,29 @@ public class SignButtonsPanel extends JPanel
 	 */
 	private void addIcons()
 	{
-		newSignLinkIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/signlink(16x16)-(for editor).jpg")));
-		newSignLinkButton = new JButton(newSignLinkIcon);
+		
+		newSignLinkButton = new JButton(images.newSignLinkIcon);
 		newSignLinkButton.setPreferredSize(new Dimension(160, 30));
 		newSignLinkButton.setMaximumSize(new Dimension(160, 30));
 		newSignLinkButton.setMinimumSize(new Dimension(160, 30));
 		newSignLinkButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		newSignLinkButton.setEnabled(false);
 
-		editPropertiesIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sEditSignlink.jpg")));
-		editPropertiesButton = new JButton(editPropertiesIcon);
+		editPropertiesButton = new JButton(images.editSignLinkIcon);
 		editPropertiesButton.setPreferredSize(new Dimension(160, 30));
 		editPropertiesButton.setMaximumSize(new Dimension(160, 30));
 		editPropertiesButton.setMinimumSize(new Dimension(160, 30));
 		editPropertiesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		editPropertiesButton.setEnabled(false);
 
-		previewIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sPlaySignlink.jpg")));
-		previewButton = new JButton(previewIcon);
+		previewButton = new JButton(images.previewSignLinkIcon);
 		previewButton.setPreferredSize(new Dimension(160, 30));
 		previewButton.setMaximumSize(new Dimension(160, 30));
 		previewButton.setMinimumSize(new Dimension(160, 30));
 		previewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		previewButton.setEnabled(false);
 
-		deleteIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sDelete.jpg")));
-		deleteButton = new JButton(deleteIcon);
+		deleteButton = new JButton(images.deleteSignLinkIcon);
 		deleteButton.setPreferredSize(new Dimension(160, 30));
 		deleteButton.setMaximumSize(new Dimension(160, 30));
 		deleteButton.setMinimumSize(new Dimension(160, 30));
