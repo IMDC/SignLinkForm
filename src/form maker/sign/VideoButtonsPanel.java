@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -23,27 +22,18 @@ import javax.swing.Timer;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoButtonsPanel.java 67 2007-11-22 18:31:28Z martin $
+ * @version $Id: VideoButtonsPanel.java 94 2007-12-18 21:31:47Z martin $
  */
 public class VideoButtonsPanel extends JPanel
 {
-	/**
-	 * 
-	 */
 	private static final long	serialVersionUID	= -2174365661316733013L;
-	private final ImageIcon		playIcon			= new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-															this.getClass().getResource("/icons/sPlay.jpg")));
-	private final ImageIcon		pauseIcon			= new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-															this.getClass().getResource("/icons/sStopRecPreview.jpg")));
+	private final SignlinkIcons images = SignlinkIcons.getInstance();
+	
 	private JButton				playPauseButton;
 	private JButton				rewindButton;
-	private ImageIcon			rewindIcon;
 	private JButton				fastForwardButton;
-	private ImageIcon			fastForwardIcon;
 	private JButton				frameBackButton;
-	private ImageIcon			frameBackIcon;
 	private JButton				frameForwardButton;
-	private ImageIcon			frameForwardIcon;
 	private SignSlider			vSlide;
 	private JPanel				bPanel;
 	private JTextField			vText;
@@ -106,14 +96,14 @@ public class VideoButtonsPanel extends JPanel
 		bPanel.add(frameForwardButton);
 		bPanel.add(fastForwardButton);
 
-		final JButton helpButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHelp.jpg"))));
+		final JButton helpButton = new JButton(images.helpImageIcon);
 		helpButton.setActionCommand("help");
 		helpButton.addActionListener(listen);
 		helpButton.setPreferredSize(new Dimension(22, 22));
 
 		bPanel.add(Box.createHorizontalStrut(10));
 		bPanel.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
 		this.add(bPanel, BorderLayout.WEST);
 	}
 
@@ -144,26 +134,22 @@ public class VideoButtonsPanel extends JPanel
 		playPauseButton.setMaximumSize(new Dimension(30, 30));
 		playPauseButton.setPreferredSize(new Dimension(30, 30));
 
-		rewindIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sRewind.jpg")));
-		rewindButton = new JButton(rewindIcon);
+		rewindButton = new JButton(images.rewindIcon);
 		rewindButton.setMinimumSize(new Dimension(30, 30));
 		rewindButton.setMaximumSize(new Dimension(30, 30));
 		rewindButton.setPreferredSize(new Dimension(30, 30));
 
-		fastForwardIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sFastForward.jpg")));
-		fastForwardButton = new JButton(fastForwardIcon);
+		fastForwardButton = new JButton(images.fastForwardIcon);
 		fastForwardButton.setMinimumSize(new Dimension(30, 30));
 		fastForwardButton.setMaximumSize(new Dimension(30, 30));
 		fastForwardButton.setPreferredSize(new Dimension(30, 30));
 
-		frameBackIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sStepBackward.jpg")));
-		frameBackButton = new JButton(frameBackIcon);
+		frameBackButton = new JButton(images.frameBackIcon);
 		frameBackButton.setMinimumSize(new Dimension(30, 30));
 		frameBackButton.setMaximumSize(new Dimension(30, 30));
 		frameBackButton.setPreferredSize(new Dimension(30, 30));
 
-		frameForwardIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sStepForward.jpg")));
-		frameForwardButton = new JButton(frameForwardIcon);
+		frameForwardButton = new JButton(images.frameForwardIcon);
 		frameForwardButton.setMinimumSize(new Dimension(30, 30));
 		frameForwardButton.setMaximumSize(new Dimension(30, 30));
 		frameForwardButton.setPreferredSize(new Dimension(30, 30));
@@ -380,7 +366,7 @@ public class VideoButtonsPanel extends JPanel
 	 */
 	protected ImageIcon getPlayIcon()
 	{
-		return this.playIcon;
+		return images.playImageIcon;
 	}
 
 	/**
@@ -390,6 +376,6 @@ public class VideoButtonsPanel extends JPanel
 	 */
 	protected ImageIcon getPauseIcon()
 	{
-		return this.pauseIcon;
+		return images.stopImageIcon;
 	}
 }
