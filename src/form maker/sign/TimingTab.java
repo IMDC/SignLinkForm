@@ -2,12 +2,10 @@ package sign;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -15,7 +13,7 @@ import javax.swing.JPanel;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: TimingTab.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: TimingTab.java 94 2007-12-18 21:31:47Z martin $
  *
  */
 public class TimingTab extends JPanel
@@ -64,7 +62,7 @@ public class TimingTab extends JPanel
 		public void componentShown(final ComponentEvent arg0)
 		{
 			frame = (SignLink) TimingTab.this.getRootPane().getParent();
-			frame.setHelpFile(HelpFrame.A1);
+			frame.setHelpFile(HelpFrame.A5);
 			frame.invalidate();
 			frame.validate();
 		}
@@ -74,9 +72,9 @@ public class TimingTab extends JPanel
 	 * 
 	 */
 	private static final long				serialVersionUID	= 4073898897581569578L;
+	private SignlinkIcons images = SignlinkIcons.getInstance();
 	private final TimingPanelControlPanel	tPanel;
-	private final JLabel					img					= new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-																		this.getClass().getResource("/icons/icon_bar_lower.gif"))));
+	private final JLabel					img					= new JLabel(images.iconBarLowerIcon);
 	private final TimingVideoListener		vListen;
 	private final VideoComponent			vComponent;
 	private final VideoPanel				vPanel;
