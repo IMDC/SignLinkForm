@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -26,11 +25,12 @@ import javax.swing.JPanel;
  * This is the First frame to show when starting the program
  * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: WelcomeFrame.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: WelcomeFrame.java 102 2008-01-14 15:20:35Z martin $
  */
 public class WelcomeFrame extends JFrame
 {
+
+	private SignlinkIcons	images	= SignlinkIcons.getInstance();
 
 	class BListen extends WindowAdapter implements ActionListener
 	{
@@ -45,6 +45,7 @@ public class WelcomeFrame extends JFrame
 			if (arg0.getActionCommand().equals("quit"))
 			{
 				help.dispose();
+				SignUtils.cleanUpAndExit(0);
 				WelcomeFrame.this.dispose();
 				System.exit(0);
 			}
@@ -110,13 +111,12 @@ public class WelcomeFrame extends JFrame
 	private WelcomeFrame()
 	{
 		super("Welcome");
-		HelpFrame.setHelpEnabled(true); // sets whether asl tooltips are available(help videos)
 		this.setSize(WIDTH, HEIGHT);
 		this.setResizable(false);
 		this.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - WIDTH / 2, (int) Toolkit.getDefaultToolkit()
 				.getScreenSize().getHeight()
 				/ 2 - HEIGHT / 2);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		listen = new BListen();
 		this.addWindowListener(listen);
 		addComponents();
@@ -129,12 +129,10 @@ public class WelcomeFrame extends JFrame
 	private void addComponents()
 	{
 		this.setLayout(new BorderLayout());
-		this.add(new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/welcome_top.jpg")))),
-				BorderLayout.NORTH);
+		this.add(new JLabel(images.welcomeIcon), BorderLayout.NORTH);
 		centerPanel.setBackground(bkg);
 		centerPanel.setLayout(new GridLayout(4, 1, 10, 0));
-		final JButton newButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/bFileNew.jpg"))));
+		final JButton newButton = new JButton(images.newImageIcon);
 		newButton.setActionCommand("new");
 		newButton.addActionListener(listen);
 		newButton.setPreferredSize(new Dimension(50, 50));
@@ -145,8 +143,7 @@ public class WelcomeFrame extends JFrame
 		newPanel.add(newButton);
 		newPanel.add(newLabel);
 
-		final JButton openButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				this.getClass().getResource("/icons/bFileOpen.jpg"))));
+		final JButton openButton = new JButton(images.openImageIcon);
 		openButton.setActionCommand("open");
 		openButton.addActionListener(listen);
 		openButton.setPreferredSize(new Dimension(50, 50));
@@ -157,8 +154,7 @@ public class WelcomeFrame extends JFrame
 		openPanel.add(openButton);
 		openPanel.add(openLabel);
 
-		final JButton quitButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/bQuit.jpg"))));
+		final JButton quitButton = new JButton(images.quitImageIcon);
 		quitButton.setActionCommand("quit");
 		quitButton.addActionListener(listen);
 		quitButton.setPreferredSize(new Dimension(50, 50));
@@ -169,8 +165,7 @@ public class WelcomeFrame extends JFrame
 		quitPanel.add(quitButton);
 		quitPanel.add(quitLabel);
 
-		final JButton helpButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(this.getClass().getResource("/icons/sHelp.jpg"))));
+		final JButton helpButton = new JButton(images.helpImageIcon);
 		helpButton.setActionCommand("help");
 		helpButton.addActionListener(listen);
 		helpButton.setPreferredSize(new Dimension(22, 22));
@@ -178,6 +173,7 @@ public class WelcomeFrame extends JFrame
 		final JPanel helpPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		helpPanel.setBackground(bkg);
 		helpPanel.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
 
 		centerPanel.add(newPanel);
 		centerPanel.add(openPanel);
