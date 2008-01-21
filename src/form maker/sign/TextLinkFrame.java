@@ -6,13 +6,12 @@ package sign;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,10 +21,13 @@ import quicktime.std.StdQTException;
 /**
  * @author Martin Gerdzhev
  * 
- * @version $Id: TextLinkFrame.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: TextLinkFrame.java 94 2007-12-18 21:31:47Z martin $
  */
 public class TextLinkFrame extends JFrame
 {
+	
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+
 	class BListener extends WindowAdapter implements ActionListener
 	{
 
@@ -38,7 +40,16 @@ public class TextLinkFrame extends JFrame
 		{
 			if (arg0.getActionCommand().equals("close"))
 			{
+				if (help != null)
+					help.dispose();
 				TextLinkFrame.this.close();
+			}
+			if (arg0.getActionCommand().equals("help"))
+			{
+				if (help != null)
+					help.dispose();
+				help = new HelpFrame(HelpFrame.A10, new Point((int) TextLinkFrame.this.getLocationOnScreen().getX() + WIDTH,
+						(int) TextLinkFrame.this.getLocationOnScreen().getY()));
 			}
 
 		}
@@ -57,7 +68,8 @@ public class TextLinkFrame extends JFrame
 	private final BListener			listen;
 	private boolean					removing;
 	private final TextLinkComponent	TLComponent;
-
+	private HelpFrame				help;
+	
 	private TextListener			textListen;
 
 	public TextLinkFrame(final MenuFrame mFrame, final TextListener tListen)
@@ -65,13 +77,23 @@ public class TextLinkFrame extends JFrame
 		super("SignLink List");
 		frame = mFrame;
 		this.setSize(new Dimension(475, 390));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		this.setLayout(new BorderLayout());
 		listen = new BListener();
 		textListen = tListen;
 		this.addWindowListener(listen);
 		TLComponent = new TextLinkComponent(frame);
+		
+		final JButton helpButton = new JButton(images.helpImageIcon);
+		helpButton.setActionCommand("help");
+		helpButton.addActionListener(listen);
+		helpButton.setPreferredSize(new Dimension(22, 22));
+		final JPanel helpPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		helpPanel.add(helpButton);
+		helpButton.setEnabled(HelpFrame.isHelpEnabled());
+		
 		this.add(TLComponent, BorderLayout.CENTER);
+		this.add(helpPanel,BorderLayout.WEST);
 		addButtons();
 		this.setVisible(false);
 		this.setResizable(false);
@@ -83,8 +105,8 @@ public class TextLinkFrame extends JFrame
 	private void addButtons()
 	{
 		south = new JPanel();
-		final JButton closeButton = new JButton("Close", new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sCancel.jpg"))));
-		final JButton doneButton = new JButton("Done", new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/sOK-Done.jpg"))));
+		final JButton closeButton = new JButton("Close", images.cancelIcon);
+		final JButton doneButton = new JButton("Done", images.doneIcon);
 		closeButton.setActionCommand("close");
 		doneButton.setActionCommand("link added");
 		closeButton.addActionListener(listen);
