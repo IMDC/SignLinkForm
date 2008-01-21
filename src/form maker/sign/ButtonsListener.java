@@ -20,11 +20,13 @@ import javax.swing.JProgressBar;
  * A listener Class for the file manipulation buttons and menu items
  * 
  * @author Martin Gerdzhev
- * @version $Id: ButtonsListener.java 66 2007-11-22 16:51:10Z martin $
+ * @version $Id: ButtonsListener.java 105 2008-01-15 16:29:37Z martin $
  */
 
 public class ButtonsListener implements ActionListener
 {
+	private SignlinkIcons		images				= SignlinkIcons.getInstance();
+
 	private MenuFrame			frame;
 	private JFrame				exportFrame;
 	public static final String	SIGNICONSLOCATION	= "signlink_images" + File.separator;
@@ -32,16 +34,14 @@ public class ButtonsListener implements ActionListener
 	/**
 	 * A constructor for the listener class
 	 * 
-	 * @param aComponent -
-	 *            the video component that it is supposed to open
+	 * @param mFrame -
+	 *            MenuFrame object for being able to close it
 	 */
 	protected ButtonsListener(MenuFrame mFrame)
 	{
 		super();
 		frame = mFrame;
 	}
-	
-
 
 	/**
 	 * the method that performs the necessary actions
@@ -57,8 +57,6 @@ public class ButtonsListener implements ActionListener
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (option == JOptionPane.NO_OPTION)
 				{
-					frame.setVisible(false);
-					frame.dispose();
 				}
 				else if (option == JOptionPane.CANCEL_OPTION)
 				{
@@ -73,8 +71,6 @@ public class ButtonsListener implements ActionListener
 						this.saveAs();
 
 					frame.setModified(false);
-					frame.setVisible(false);
-					frame.dispose();
 				}
 			}
 			else
@@ -89,11 +85,11 @@ public class ButtonsListener implements ActionListener
 				else
 				// yes option
 				{
-					frame.setVisible(false);
-					frame.dispose();
 				}
 			}
-			frame.getVComponent().getVideoPanel().closeSession();
+			frame.setVisible(false);
+			frame.cleanUp();
+			frame.dispose();
 			SignUtils.cleanUpAndExit(0);
 		}
 
@@ -105,9 +101,6 @@ public class ButtonsListener implements ActionListener
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (option == JOptionPane.NO_OPTION)
 				{
-					frame.setVisible(false);
-					frame.dispose();
-					CreateWindow.getInstance().setVisible(true);
 				}
 				else if (option == JOptionPane.CANCEL_OPTION)
 				{
@@ -122,22 +115,48 @@ public class ButtonsListener implements ActionListener
 						this.saveAs();
 
 					frame.setModified(false);
-
-					frame.setVisible(false);
-					frame.dispose();
-					CreateWindow.getInstance().setVisible(true);
 				}
 			}
-			else
-			{
-				frame.setVisible(false);
-				frame.dispose();
-				CreateWindow.getInstance().setVisible(true);
-			}
+			frame.setVisible(false);
+			frame.cleanUp();
+			frame.dispose();
+			CreateWindow.getInstance().setVisible(true);
 		}
 
 		if (event.getActionCommand().equals("open")) // opening a new movie
 		{
+			if (frame.isModified())
+			{
+				int option = JOptionPane.showConfirmDialog(null, "The Project is not saved. Do you want to save the project?", "Warning",
+						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (option == JOptionPane.NO_OPTION)
+				{
+				}
+				else if (option == JOptionPane.CANCEL_OPTION)
+				{
+					return;
+				}
+				else
+				// YES_OPTION
+				{
+					if (frame.getXmlFile() != null)
+						this.save(frame.getXmlFile().getAbsolutePath());
+					else
+						this.saveAs();
+
+					frame.setModified(false);
+				}
+			}
+			final JFileChooser jfc = new JFileChooser();
+			jfc.setFileFilter(new SgnFileFilter());
+			if (jfc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
+			{
+				if (frame.getHelp() != null)
+					frame.getHelp().dispose();
+				new XMLImporter(jfc.getSelectedFile());
+				frame.cleanUp();
+				frame.dispose();
+			}
 		}
 
 		if (event.getActionCommand().equals("save"))
@@ -164,11 +183,23 @@ public class ButtonsListener implements ActionListener
 			final JButton doneButton;
 			if (frame.isModified())
 			{
-				if (frame.getXmlFile() != null)
-					this.save(frame.getXmlFile().getAbsolutePath());
+				int option = JOptionPane.showConfirmDialog(null,
+						"The Project is not saved. You must save the project before exporting.\nDo you want to save the project?",
+						"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (option == JOptionPane.NO_OPTION)
+				{
+					return;
+				}
 				else
-					this.saveAs();
-				frame.setModified(false);
+				// YES_OPTION
+				{
+					if (frame.getXmlFile() != null)
+						this.save(frame.getXmlFile().getAbsolutePath());
+					else
+						this.saveAs();
+
+					frame.setModified(false);
+				}
 			}
 			JPanel progressPanel = new JPanel();
 			progressBar = new JProgressBar(0, 100);
@@ -179,7 +210,7 @@ public class ButtonsListener implements ActionListener
 			label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 			exportFrame = new JFrame("Exporting File...");
 			exportFrame.setSize(width, height);
-			exportFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+			exportFrame.setIconImage(images.signEdIcon16);
 			exportFrame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - width / 2, (int) Toolkit
 					.getDefaultToolkit().getScreenSize().getHeight()
 					/ 2 - height / 2);
@@ -244,13 +275,16 @@ public class ButtonsListener implements ActionListener
 
 		}
 
-		if (event.getActionCommand().equals("Done")) // the done button in the export frame isclicked
+		if (event.getActionCommand().equals("Done")) // the done button in the export frame is clicked
 		{
 			exportFrame.dispose();
 		}
 
 	}
 
+	/**
+	 * Asks the user where and with what name to save the project
+	 */
 	protected void saveAs()
 	{
 		JFileChooser jfc = new JFileChooser();
@@ -277,10 +311,16 @@ public class ButtonsListener implements ActionListener
 		}
 	}
 
+	/**
+	 * Saves the project with the specified destination URL
+	 * 
+	 * @param destinationFileURL
+	 */
 	protected void save(String destinationFileURL)
 	{
 		System.out.println(frame.getVComponent().getVideoPanel().getFile().getAbsolutePath());
-		if (frame.getVComponent().getVideoPanel().getFile().getAbsolutePath().endsWith(".flexTemp" + File.separator + "tmp.mp4"))
+		String tmpName = frame.getVComponent().getVideoPanel().getFile().getName();
+		if (tmpName.startsWith("tmp") && tmpName.endsWith(".mp4"))
 		{
 			File destFile = new File(destinationFileURL.substring(0, destinationFileURL.lastIndexOf(".sgn")) + ".mp4");
 			try
