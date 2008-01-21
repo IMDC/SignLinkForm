@@ -4,7 +4,6 @@
 package sign;
 
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,12 +12,15 @@ import javax.swing.JFrame;
 /**
  * @author Martin Gerdzhev
  * 
- * @version $Id: HelpFrame.java 65 2007-11-22 16:49:31Z martin $
+ * @version $Id: HelpFrame.java 92 2007-12-18 18:48:20Z laurel $
  */
 public class HelpFrame extends JFrame
 {
 
 	private static final long	serialVersionUID	= 5137465102736706914L;
+	
+	private SignlinkIcons images = SignlinkIcons.getInstance();
+
 	public static final String	WELCOME				= "/HelpVideos/introsigned.mp4";
 
 	public static final String	A					= "/HelpVideos/addingtext.mp4";
@@ -56,7 +58,7 @@ public class HelpFrame extends JFrame
 		video = new VideoPanel(this.getClass().getResourceAsStream(movieName));
 
 		this.setLocation(location);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/icons/SignEd_icon_16.jpg")));
+		this.setIconImage(images.signEdIcon16);
 		this.addWindowListener(new WindowAdapter()
 		{/*
 			 * (non-Javadoc)
