@@ -2,9 +2,11 @@ package sign.recording;
 
    import java.io.File;
    import javax.swing.filechooser.*;
-
-   /* ImageFilter.java is a 1.4 example used by FileChooserDemo2.java. */
-   public class MOVFilter extends FileFilter {
+   /**
+ 	* ImageFilter.java is a 1.4 example used by FileChooserDemo2.java.
+    * @version $Id: MOVFilter.java 114 2008-01-28 19:56:44Z laurel $
+    */
+    public class MOVFilter extends FileFilter {
        public boolean accept(File f) {
            if (f.isDirectory()) {
                return true;

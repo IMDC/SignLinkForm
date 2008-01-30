@@ -26,39 +26,35 @@ import javax.swing.JPanel;
 import sign.CreateWindow;
 
 /**
- * 
  * @author Budi Kurniawan
- * @author Laurel Williams
- * 
- * Code adapted from:
- * http://www.javaworld.com/javaworld/jw-05-2001/jw-0504-jmf2.html?page=1
- * 
+ * @author Laurel Williams Code adapted from: http://www.javaworld.com/javaworld/jw-05-2001/jw-0504-jmf2.html?page=1
  * @version $Id: $
  */
-public class CaptureDeviceDialog extends JDialog implements ActionListener,
-		ItemListener {
+public class CaptureDeviceDialog extends JDialog implements ActionListener, ItemListener
+{
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String			OK_ACTION			= "OK";
-	private static final String			CANCEL_ACTION			= "Cancel";
-	
-	private static final int FORMAT_STRING_MAX_LENGTH = 100;
+	private static final long			serialVersionUID			= 1L;
 
-	boolean configurationChanged = false;
-	private Vector<CaptureDeviceInfo> audioDevices;
-	private Vector<CaptureDeviceInfo> videoDevices;
-	private Vector<Format> audioFormats = new Vector<Format>();
-	private Vector<Format> videoFormats = new Vector<Format>();
-	private JComboBox audioDeviceCombo;
-	private JComboBox videoDeviceCombo;
-	private JComboBox audioFormatCombo;
-	private JComboBox videoFormatCombo;
-	private static Dimension PREFERRED_VIDEO_DIMENSIONS = new Dimension(320,
-			240); // this to be set with a preferences page later on.
-	public static boolean AUDIO_ON = false; // this to be set via a preference page later on.
+	private static final String			OK_ACTION					= "OK";
+	private static final String			CANCEL_ACTION				= "Cancel";
 
-	private static CaptureDeviceDialog			instance;
+	private static final int			FORMAT_STRING_MAX_LENGTH	= 100;
+
+	boolean								configurationChanged		= false;
+	private Vector<CaptureDeviceInfo>	audioDevices;
+	private Vector<CaptureDeviceInfo>	videoDevices;
+	private Vector<Format>				audioFormats				= new Vector<Format>();
+	private Vector<Format>				videoFormats				= new Vector<Format>();
+	private JComboBox					audioDeviceCombo;
+	private JComboBox					videoDeviceCombo;
+	private JComboBox					audioFormatCombo;
+	private JComboBox					videoFormatCombo;
+	private static Dimension			PREFERRED_VIDEO_DIMENSIONS	= new Dimension(320, 240);	// this to be set with a preferences page
+																								// later on.
+	public static boolean				AUDIO_ON					= false;					// this to be set via a preference page
+																								// later on.
+
+	private static CaptureDeviceDialog	instance;
 
 	public static CaptureDeviceDialog getInstance()
 	{
@@ -68,34 +64,37 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 		}
 		return instance;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private CaptureDeviceDialog(JFrame parent, String title, boolean mode) {
+	private CaptureDeviceDialog(JFrame parent, String title, boolean mode)
+	{
 		super(parent, title, mode);
 		initUI();
 
-
-		Vector<CaptureDeviceInfo> captureDevices = CaptureDeviceManager
-				.getDeviceList(null);
-		if (captureDevices != null && captureDevices.size() > 0) {
+		Vector<CaptureDeviceInfo> captureDevices = CaptureDeviceManager.getDeviceList(null);
+		if (captureDevices != null && captureDevices.size() > 0)
+		{
 			sortCaptureDevices(captureDevices);
-		} else {
-			RecordingException.showMessageAndThrowRecordingException(this,
-					new RuntimeException(), "No capture devices found");
+		}
+		else
+		{
+			RecordingException.showMessageAndThrowRecordingException(this, new RuntimeException(), "No capture devices found");
 		}
 
 	}
 
-	private void initUI() {
+	private void initUI()
+	{
 		this.setLayout(new BorderLayout());
 		JPanel devicePanel = new JPanel();
 		devicePanel.setLayout(new GridBagLayout());
 
-		if (AUDIO_ON) {
+		if (AUDIO_ON)
+		{
 			initAudioUI(devicePanel);
 			audioDeviceCombo.addItemListener(this);
 		}
-		
+
 		initVideoUI(devicePanel);
 		videoDeviceCombo.addItemListener(this);
 
@@ -113,65 +112,70 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 		cancelButton.addActionListener(this);
 	}
 
-	private void sortCaptureDevices(Vector<CaptureDeviceInfo> captureDevices) {
+	private void sortCaptureDevices(Vector<CaptureDeviceInfo> captureDevices)
+	{
 		if (AUDIO_ON)
 			sortAudioCaptureDevices(captureDevices);
 		sortVideoDevices(captureDevices);
 	}
 
-	private void sortVideoDevices(Vector<CaptureDeviceInfo> captureDevices) {
+	private void sortVideoDevices(Vector<CaptureDeviceInfo> captureDevices)
+	{
 		videoDevices = new Vector<CaptureDeviceInfo>();
-		for (int i = 0; i < captureDevices.size(); i++) {
-			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) captureDevices
-					.elementAt(i);
+		for (int i = 0; i < captureDevices.size(); i++)
+		{
+			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) captureDevices.elementAt(i);
 			Format[] formats = captureDeviceInfo.getFormats();
-			for (int j = 0; j < formats.length; j++) {
-				if (formats[j] instanceof VideoFormat) {
+			for (int j = 0; j < formats.length; j++)
+			{
+				if (formats[j] instanceof VideoFormat)
+				{
 					videoDevices.addElement(captureDeviceInfo);
 					videoDeviceCombo.addItem(captureDeviceInfo.getName());
 					break;
 				}
 			}
 		}
-		if (videoDevices.size() <= 0) {
-			RecordingException.showMessageAndThrowRecordingException(this,
-					new RuntimeException(), "No video capture devices found");
+		if (videoDevices.size() <= 0)
+		{
+			RecordingException.showMessageAndThrowRecordingException(this, new RuntimeException(), "No video capture devices found");
 		}
 	}
 
-	private void sortAudioCaptureDevices(
-			Vector<CaptureDeviceInfo> captureDevices) {
+	private void sortAudioCaptureDevices(Vector<CaptureDeviceInfo> captureDevices)
+	{
 		if (!AUDIO_ON)
 			return;
 		audioDevices = new Vector<CaptureDeviceInfo>();
-		for (int i = 0; i < captureDevices.size(); i++) {
-			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) captureDevices
-					.elementAt(i);
+		for (int i = 0; i < captureDevices.size(); i++)
+		{
+			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) captureDevices.elementAt(i);
 			Format[] formats = captureDeviceInfo.getFormats();
-			for (int j = 0; j < formats.length; j++) {
-				if (formats[j] instanceof AudioFormat) {
+			for (int j = 0; j < formats.length; j++)
+			{
+				if (formats[j] instanceof AudioFormat)
+				{
 					audioDevices.addElement(captureDeviceInfo);
 					audioDeviceCombo.addItem(captureDeviceInfo.getName());
 					break;
 				}
 			}
 		}
-		if (audioDevices.size() <= 0) {
-			RecordingException.showMessageAndThrowRecordingException(this,
-					new RuntimeException(), "No audio capture devices found");
+		if (audioDevices.size() <= 0)
+		{
+			RecordingException.showMessageAndThrowRecordingException(this, new RuntimeException(), "No audio capture devices found");
 		}
 
 	}
 
-	private void initVideoUI(JPanel devicePanel) {
+	private void initVideoUI(JPanel devicePanel)
+	{
 		JLabel videoDeviceLabel = new JLabel("Video Device(s):");
-		GridBagConstraints gbConstraints = setGridConstraints(2, 0, 1, 1,
-				GridBagConstraints.NONE);
+		GridBagConstraints gbConstraints = setGridConstraints(2, 0, 1, 1, GridBagConstraints.NONE);
 		devicePanel.add(videoDeviceLabel, gbConstraints);
 
 		videoDeviceCombo = new JComboBox();
-		gbConstraints = setGridConstraints(2, 1, 2, 1,
-				GridBagConstraints.HORIZONTAL);
+		gbConstraints = setGridConstraints(2, 1, 2, 1, GridBagConstraints.HORIZONTAL);
 		devicePanel.add(videoDeviceCombo, gbConstraints);
 
 		JLabel videoFormatLabel = new JLabel("Video Format(s):");
@@ -179,21 +183,20 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 		devicePanel.add(videoFormatLabel, gbConstraints);
 
 		videoFormatCombo = new JComboBox();
-		gbConstraints = setGridConstraints(3, 1, 2, 1,
-				GridBagConstraints.HORIZONTAL);
+		gbConstraints = setGridConstraints(3, 1, 2, 1, GridBagConstraints.HORIZONTAL);
 		devicePanel.add(videoFormatCombo, gbConstraints);
 	}
 
-	private void initAudioUI(JPanel devicePanel) {
-		if (!AUDIO_ON) return;
+	private void initAudioUI(JPanel devicePanel)
+	{
+		if (!AUDIO_ON)
+			return;
 		JLabel audioDeviceLabel = new JLabel("Audio Device(s):");
-		GridBagConstraints gbConstraints = setGridConstraints(0, 0, 1, 1,
-				GridBagConstraints.NONE);
+		GridBagConstraints gbConstraints = setGridConstraints(0, 0, 1, 1, GridBagConstraints.NONE);
 		devicePanel.add(audioDeviceLabel, gbConstraints);
 
 		audioDeviceCombo = new JComboBox();
-		gbConstraints = setGridConstraints(0, 1, 2, 1,
-				GridBagConstraints.HORIZONTAL);
+		gbConstraints = setGridConstraints(0, 1, 2, 1, GridBagConstraints.HORIZONTAL);
 		devicePanel.add(audioDeviceCombo, gbConstraints);
 
 		JLabel audioFormatLabel = new JLabel("Audio Format(s):");
@@ -201,29 +204,34 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 		devicePanel.add(audioFormatLabel, gbConstraints);
 
 		audioFormatCombo = new JComboBox();
-		gbConstraints = setGridConstraints(1, 1, 2, 1,
-				GridBagConstraints.HORIZONTAL);
+		gbConstraints = setGridConstraints(1, 1, 2, 1, GridBagConstraints.HORIZONTAL);
 		devicePanel.add(audioFormatCombo, gbConstraints);
 	}
 
-	private void populateAudioFormats() {
+	private void populateAudioFormats()
+	{
 		if (!AUDIO_ON)
 			return;
 		audioFormats.removeAllElements();
 		audioFormatCombo.removeAllItems();
 
 		int selectedIndex = audioDeviceCombo.getSelectedIndex();
-		if (selectedIndex != -1) { // a device is selected
-			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) audioDevices
-					.elementAt(selectedIndex);
-			if (captureDeviceInfo != null) {
+		if (selectedIndex != -1)
+		{ // a device is selected
+			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) audioDevices.elementAt(selectedIndex);
+			if (captureDeviceInfo != null)
+			{
 				Format[] formats = captureDeviceInfo.getFormats();
-				for (int j = 0; j < formats.length; j++) {
-					if (formats[j] instanceof AudioFormat) {
+				for (int j = 0; j < formats.length; j++)
+				{
+					if (formats[j] instanceof AudioFormat)
+					{
 						AudioFormat audioFormat = (AudioFormat) formats[j];
-						if (correctAudioFormat(audioFormat)) {
+						if (correctAudioFormat(audioFormat))
+						{
 							String audioFormatString = audioFormat.toString();
-							if (audioFormatString.length() > FORMAT_STRING_MAX_LENGTH) audioFormatString = audioFormatString.substring(0, FORMAT_STRING_MAX_LENGTH) + "...";
+							if (audioFormatString.length() > FORMAT_STRING_MAX_LENGTH)
+								audioFormatString = audioFormatString.substring(0, FORMAT_STRING_MAX_LENGTH) + "...";
 							audioFormatCombo.addItem(audioFormatString);
 							audioFormats.add(audioFormat);
 						}
@@ -231,30 +239,35 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 				}
 			}
 		}
-		if (audioFormats.size() <= 0) {
-			RecordingException
-					.showMessageAndThrowRecordingException(this,
-							new RuntimeException(),
-							"No audio capture devices meet the desired specifications.");
+		if (audioFormats.size() <= 0)
+		{
+			RecordingException.showMessageAndThrowRecordingException(this, new RuntimeException(),
+					"No audio capture devices meet the desired specifications.");
 		}
 	}
 
-	private void populateVideoFormats() {
+	private void populateVideoFormats()
+	{
 		videoFormats.removeAllElements();
 		videoFormatCombo.removeAllItems();
 
 		int selectedIndex = videoDeviceCombo.getSelectedIndex();
-		if (selectedIndex != -1) { // a device is selected
-			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) videoDevices
-					.elementAt(selectedIndex);
-			if (captureDeviceInfo != null) {
+		if (selectedIndex != -1)
+		{ // a device is selected
+			CaptureDeviceInfo captureDeviceInfo = (CaptureDeviceInfo) videoDevices.elementAt(selectedIndex);
+			if (captureDeviceInfo != null)
+			{
 				Format[] formats = captureDeviceInfo.getFormats();
-				for (int j = 0; j < formats.length; j++) {
-					if (formats[j] instanceof VideoFormat) {
+				for (int j = 0; j < formats.length; j++)
+				{
+					if (formats[j] instanceof VideoFormat)
+					{
 						VideoFormat videoFormat = (VideoFormat) formats[j];
-						if (correctVideoFormat(videoFormat)) {
+						if (correctVideoFormat(videoFormat))
+						{
 							String videoFormatString = videoFormat.toString();
-							if (videoFormatString.length() > FORMAT_STRING_MAX_LENGTH) videoFormatString = videoFormatString.substring(0, FORMAT_STRING_MAX_LENGTH) + "...";
+							if (videoFormatString.length() > FORMAT_STRING_MAX_LENGTH)
+								videoFormatString = videoFormatString.substring(0, FORMAT_STRING_MAX_LENGTH) + "...";
 							videoFormatCombo.addItem(videoFormatString);
 							videoFormats.add(videoFormat);
 						}
@@ -262,73 +275,86 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 				}
 			}
 		}
-		if (videoDevices.size() <= 0) {
-			RecordingException.showMessageAndThrowRecordingException(this,
-					new RuntimeException(),
+		if (videoDevices.size() <= 0)
+		{
+			RecordingException.showMessageAndThrowRecordingException(this, new RuntimeException(),
 					"No video formats meet the required specifications.");
 		}
 	}
 
-	private boolean correctVideoFormat(VideoFormat format) {
+	private boolean correctVideoFormat(VideoFormat format)
+	{
 		return (format.getSize().equals(PREFERRED_VIDEO_DIMENSIONS));
 	}
 
-	private boolean correctAudioFormat(AudioFormat format) {
+	private boolean correctAudioFormat(AudioFormat format)
+	{
 		return true; // to be determined
 	}
 
-	public CaptureDeviceInfo getAudioDevice() {
-		if (!AUDIO_ON) return null;
+	public CaptureDeviceInfo getAudioDevice()
+	{
+		if (!AUDIO_ON)
+			return null;
 		CaptureDeviceInfo cdi = null;
-		if (audioDeviceCombo != null) {
+		if (audioDeviceCombo != null)
+		{
 			int i = audioDeviceCombo.getSelectedIndex();
 			cdi = (CaptureDeviceInfo) audioDevices.elementAt(i);
 		}
 		return cdi;
 	}
 
-	public CaptureDeviceInfo getVideoDevice() {
+	public CaptureDeviceInfo getVideoDevice()
+	{
 		CaptureDeviceInfo cdi = null;
-		if (videoDeviceCombo != null) {
+		if (videoDeviceCombo != null)
+		{
 			int i = videoDeviceCombo.getSelectedIndex();
 			cdi = (CaptureDeviceInfo) videoDevices.elementAt(i);
 		}
 		return cdi;
 	}
 
-	public Format getAudioFormat() {
-		if (!AUDIO_ON) return null;
+	public Format getAudioFormat()
+	{
+		if (!AUDIO_ON)
+			return null;
 		Format format = null;
-		if (audioFormatCombo != null) {
+		if (audioFormatCombo != null)
+		{
 			int i = audioFormatCombo.getSelectedIndex();
 			format = (Format) audioFormats.elementAt(i);
 		}
 		return format;
 	}
 
-	public Format getVideoFormat() {
+	public Format getVideoFormat()
+	{
 		Format format = null;
-		if (videoFormatCombo != null) {
+		if (videoFormatCombo != null)
+		{
 			int i = videoFormatCombo.getSelectedIndex();
 			format = (Format) videoFormats.elementAt(i);
 		}
 		return format;
 	}
 
-	public boolean hasConfigurationChanged() {
+	public boolean hasConfigurationChanged()
+	{
 		return configurationChanged;
 	}
 
-	public void actionPerformed(ActionEvent ae) {
+	public void actionPerformed(ActionEvent ae)
+	{
 		String command = ae.getActionCommand().toString();
-		if (command.equals(OK_ACTION)) {
+		if (command.equals(OK_ACTION))
+		{
 			configurationChanged = true;
 			try
 			{
-				RecordingWindow recordingFrame = RecordingWindow
-						.getInstance();
+				RecordingWindow recordingFrame = RecordingWindow.getInstance();
 				recordingFrame.addDisplayDataSource();
-				recordingFrame.setSize(400, 400);
 				recordingFrame.setLocationRelativeTo(null);
 				recordingFrame.setVisible(true);
 			}
@@ -337,23 +363,28 @@ public class CaptureDeviceDialog extends JDialog implements ActionListener,
 				CreateWindow.getInstance().setVisible(true);
 			}
 		}
-		else if (command.equals(CANCEL_ACTION)) {
+		else if (command.equals(CANCEL_ACTION))
+		{
 			CreateWindow.getInstance().setVisible(true);
 		}
 		this.dispose();
 	}
 
-	public void itemStateChanged(ItemEvent ie) {
-		if (ie.getSource().equals(audioDeviceCombo)) {
+	public void itemStateChanged(ItemEvent ie)
+	{
+		if (ie.getSource().equals(audioDeviceCombo))
+		{
 			populateAudioFormats();
-		} else {
+		}
+		else
+		{
 			populateVideoFormats();
 		}
 		this.pack();
 	}
 
-	private GridBagConstraints setGridConstraints(int row, int column,
-			int width, int height, int fill) {
+	private GridBagConstraints setGridConstraints(int row, int column, int width, int height, int fill)
+	{
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridy = row;
 		constraints.gridx = column;
