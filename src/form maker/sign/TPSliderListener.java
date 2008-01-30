@@ -10,7 +10,7 @@ import javax.swing.event.ChangeListener;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: TPSliderListener.java 52 2007-11-08 03:56:17Z martin $
+ * @version $Id: TPSliderListener.java 118 2008-01-29 17:56:25Z martin $
  *
  */
 public class TPSliderListener implements ChangeListener
@@ -57,7 +57,7 @@ public class TPSliderListener implements ChangeListener
 	{
 		int minimum = -1; // get the signlink that's before the current time
 		int maximum = -1; // get the signlink that's after the current time
-		if (e != null && e.getSource().toString().contains("Main")) // if the slider from the main frame is calling the event
+		if (e != null && e.getSource().toString().contains("VideoListener")) // if the slider from the main frame is calling the event
 		{
 			frame = (MenuFrame) vComp.getRootPane().getParent();
 			signs = vSlide.getSigns();

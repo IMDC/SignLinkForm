@@ -41,7 +41,7 @@ import quicktime.util.QTUtils;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoPanel.java 81 2007-11-29 20:20:18Z martin $
+ * @version $Id: VideoPanel.java 118 2008-01-29 17:56:25Z martin $
  */
 public class VideoPanel extends JPanel
 {
@@ -175,7 +175,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * a method to fast forward a movie
 	 */
-	protected void fastForward()
+	public void fastForward()
 	{
 		try
 		{
@@ -314,7 +314,7 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected float getRate()
+	public float getRate()
 	{
 		try
 		{
@@ -344,7 +344,7 @@ public class VideoPanel extends JPanel
 	 * 
 	 * @return the current time
 	 */
-	protected int getTime()
+	public int getTime()
 	{
 		try
 		{
@@ -372,7 +372,7 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected int getTimeValue()
+	public int getTimeValue()
 	{
 		try
 		{
@@ -386,7 +386,7 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected boolean isDone()
+	public boolean isDone()
 	{
 		try
 		{
@@ -403,7 +403,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * Opens a Quicktime Movie
 	 */
-	protected void open()
+	public void open()
 	{
 		f = prompt();
 		movieComponent = getQuicktimeMovieComponent(f);
@@ -414,7 +414,7 @@ public class VideoPanel extends JPanel
 		this.repaint();
 	}
 
-	protected void openFromFile(final File aFile)
+	public void openFromFile(final File aFile)
 	{
 		f = aFile;
 		movieComponent = getQuicktimeMovieComponent(aFile);
@@ -428,7 +428,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * Opens a Quicktime Session
 	 */
-	protected void openSession()
+	public void openSession()
 	{
 		// Open a Quicktime session
 		try
@@ -445,7 +445,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * Plays a Quicktime Movie
 	 */
-	protected void play()
+	public void play()
 	{
 		// Start playing the movie
 		try
@@ -466,7 +466,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * a method to rewind a movie
 	 */
-	protected void rewind()
+	public void rewind()
 	{
 		try
 		{
@@ -483,7 +483,7 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected void setActive(final boolean flag)
+	public void setActive(final boolean flag)
 	{
 		try
 		{
@@ -496,12 +496,12 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected void setMovie(final Movie aMovie)
+	public void setMovie(final Movie aMovie)
 	{
 		movie = aMovie;
 	}
 
-	protected void setTime(final int aTime)
+	public void setTime(final int aTime)
 	{
 		try
 		{
@@ -514,7 +514,7 @@ public class VideoPanel extends JPanel
 		}
 	}
 
-	protected void setTimeMiliseconds(final int time)
+	public void setTimeMiliseconds(final int time)
 	{
 		try
 		{
@@ -530,7 +530,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * a method to go a frame backwards.
 	 */
-	protected void stepBackwards()
+	public void stepBackwards()
 	{
 		this.setTimeMiliseconds(this.getTime() - 100);
 	}
@@ -538,7 +538,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * a method to go a frame forward.
 	 */
-	protected void stepForward()
+	public void stepForward()
 	{
 		this.setTimeMiliseconds(this.getTime() + 100);
 	}
@@ -546,7 +546,7 @@ public class VideoPanel extends JPanel
 	/**
 	 * Stops a Quicktime Movies
 	 */
-	protected void stop()
+	public void stop()
 	{
 		try
 		{

@@ -19,7 +19,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
@@ -29,7 +28,7 @@ import sign.recording.CaptureDeviceDialog;
  * A factory class for the CreateWindow containing CreateWindowListener and GetInstance.
  * 
  * @author Martin Gerdzhev
- * @version $Id: CreateWindow.java 108 2008-01-16 19:15:43Z laurel $
+ * @version $Id: CreateWindow.java 118 2008-01-29 17:56:25Z martin $
  */
 public class CreateWindow extends JFrame implements WindowListener
 {

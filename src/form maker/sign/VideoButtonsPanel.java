@@ -22,7 +22,7 @@ import javax.swing.Timer;
  * 
  * @author Martin Gerdzhev
  * 
- * @version $Id: VideoButtonsPanel.java 94 2007-12-18 21:31:47Z martin $
+ * @version $Id: VideoButtonsPanel.java 118 2008-01-29 17:56:25Z martin $
  */
 public class VideoButtonsPanel extends JPanel
 {
@@ -50,12 +50,12 @@ public class VideoButtonsPanel extends JPanel
 	 * @param aComponent -
 	 *            the video component that is added to this panel
 	 */
-	public VideoButtonsPanel(final ActionListener vListen)
+	public VideoButtonsPanel(VideoComponent vComp,final ActionListener vListen)
 	{
 		listen = vListen;
-		vComponent = ((VideoListener) listen).getVideoComponent();
+		vComponent = vComp;
 		this.setLayout(new BorderLayout());
-		addSlider();
+		addSlider(listen.toString());
 		addTextField();
 		addIcons();
 		addListener(listen);
@@ -82,8 +82,8 @@ public class VideoButtonsPanel extends JPanel
 	 */
 	private void addButtons()
 	{
-		final VideoListener vListen = (VideoListener) listen;
-		this.setVComponent(vListen.getVideoComponent());
+//		final VideoListener vListen = (VideoListener) listen;
+//		this.setVComponent(vListen.getVideoComponent());
 		bPanel = new JPanel();
 		bPanel.add(Box.createHorizontalStrut(8));
 		bPanel.add(vText);
@@ -173,7 +173,7 @@ public class VideoButtonsPanel extends JPanel
 	/**
 	 * a method to add a slider to the panel
 	 */
-	protected void addSlider()
+	protected void addSlider(String name)
 	{ 
 		vSlide = new SignSlider(0, vComponent.getVideoPanel().getDurationMilliSec(), 0);
 		vSlide.setPreferredSize(new Dimension(320, 38));
@@ -182,7 +182,7 @@ public class VideoButtonsPanel extends JPanel
 		final SignSliderUI sUI = new SignSliderUI(vSlide);
 		vSlide.setUI(sUI);
 		vSlide.setSUI(sUI);
-		vSlide.setName("Main");
+		vSlide.setName(name);
 		slideTimer = new Timer(50, listen);
 		vSlide.setEnabled(true);
 		vSlide.setVisible(true);
@@ -207,7 +207,6 @@ public class VideoButtonsPanel extends JPanel
 		vText.setMinimumSize(new Dimension(65, 25));
 		vText.setMaximumSize(new Dimension(65, 25));
 		vText.setPreferredSize(new Dimension(65, 25));
-		Font font = new Font("arial", Font.PLAIN, 12);
 		vText.setText("00:00:000");
 		vText.setFont(font);
 		vText.setEditable(false);
@@ -224,22 +223,22 @@ public class VideoButtonsPanel extends JPanel
 		return this.frameForwardButton;
 	}
 
-	protected ActionListener getListen()
+	public ActionListener getListen()
 	{
 		return this.listen;
 	}
 
-	protected String getMil()
+	public String getMil()
 	{
 		return this.mil;
 	}
 
-	protected String getMin()
+	public String getMin()
 	{
 		return this.min;
 	}
 
-	protected JButton getPlayPauseButton()
+	public JButton getPlayPauseButton()
 	{
 		return this.playPauseButton;
 	}
@@ -254,17 +253,17 @@ public class VideoButtonsPanel extends JPanel
 		return (ImageIcon) playPauseButton.getIcon();
 	}
 
-	protected String getSec()
+	public String getSec()
 	{
 		return this.sec;
 	}
 
-	protected Timer getSlideTimer()
+	public Timer getSlideTimer()
 	{
 		return this.slideTimer;
 	}
 
-	protected VideoComponent getVComponent()
+	public VideoComponent getVComponent()
 	{
 		return vComponent;
 	}
@@ -272,12 +271,12 @@ public class VideoButtonsPanel extends JPanel
 	/**
 	 * @return JSlider - the video slider
 	 */
-	protected SignSlider getVSlide()
+	public SignSlider getVSlide()
 	{
 		return this.vSlide;
 	}
 
-	protected JTextField getVText()
+	public JTextField getVText()
 	{
 		return vText;
 	}
@@ -291,12 +290,12 @@ public class VideoButtonsPanel extends JPanel
 		frameForwardButton.removeActionListener(b);
 	}
 
-	protected void setFrameBackButton(JButton frameBackButton)
+	public void setFrameBackButton(JButton frameBackButton)
 	{
 		this.frameBackButton = frameBackButton;
 	}
 
-	protected void setFrameForwardButton(JButton frameForwardButton)
+	public void setFrameForwardButton(JButton frameForwardButton)
 	{
 		this.frameForwardButton = frameForwardButton;
 	}
@@ -306,17 +305,17 @@ public class VideoButtonsPanel extends JPanel
 		this.listen = listen;
 	}
 
-	protected void setMil(String mil)
+	public void setMil(String mil)
 	{
 		this.mil = mil;
 	}
 
-	protected void setMin(String min)
+	public void setMin(String min)
 	{
 		this.min = min;
 	}
 
-	protected void setPlayPauseButton(JButton playPauseButton)
+	public void setPlayPauseButton(JButton playPauseButton)
 	{
 		this.playPauseButton = playPauseButton;
 	}
@@ -333,7 +332,7 @@ public class VideoButtonsPanel extends JPanel
 		repaint();
 	}
 
-	protected void setSec(String sec)
+	public void setSec(String sec)
 	{
 		this.sec = sec;
 	}
@@ -341,12 +340,6 @@ public class VideoButtonsPanel extends JPanel
 	protected void setSlideTimer(Timer slideTimer)
 	{
 		this.slideTimer = slideTimer;
-	}
-
-	protected void setVComponent(final VideoComponent vComp)
-	{
-
-		vComponent = vComp;
 	}
 
 	protected void setVSlide(SignSlider slide)
@@ -364,7 +357,7 @@ public class VideoButtonsPanel extends JPanel
 	 * 
 	 * @return the playIcon
 	 */
-	protected ImageIcon getPlayIcon()
+	public ImageIcon getPlayIcon()
 	{
 		return images.playImageIcon;
 	}
@@ -374,7 +367,7 @@ public class VideoButtonsPanel extends JPanel
 	 * 
 	 * @return the pauseIcon
 	 */
-	protected ImageIcon getPauseIcon()
+	public ImageIcon getPauseIcon()
 	{
 		return images.stopImageIcon;
 	}

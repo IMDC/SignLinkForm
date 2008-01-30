@@ -6,15 +6,12 @@ import java.io.File;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 
 /**
  * A component class that holds the video panel and the video buttons panel
  * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: VideoComponent.java 94 2007-12-18 21:31:47Z martin $
+ * @version $Id: VideoComponent.java 118 2008-01-29 17:56:25Z martin $
  */
 public class VideoComponent extends JComponent
 {
@@ -22,45 +19,31 @@ public class VideoComponent extends JComponent
 	 * 
 	 */
 	private static final long	serialVersionUID	= 5269734684510730896L;
-	private SignlinkIcons images = SignlinkIcons.getInstance();
+	private SignlinkIcons		images				= SignlinkIcons.getInstance();
 	private VideoPanel			vPanel;
 	private VideoButtonsPanel	vButtonsPanel;
-	private final VideoListener	vListen;
 	private JLabel				imageLabel;
 
-	public VideoComponent()
+	/**
 	{
-		imageLabel = new JLabel(images.iconBarLowerIcon);
-		imageLabel.setVisible(false);
-		imageLabel.setPreferredSize(new Dimension(320, 15));
-		vListen = new VideoListener(this);
-		vPanel = new VideoPanel();
-		vButtonsPanel = new VideoButtonsPanel(vListen);
-		this.setPreferredSize(new Dimension(368, 370));
-		this.setSize(368, 370);
-		this.setLayout(new BorderLayout());
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Video"));
-		this.add(vPanel, BorderLayout.NORTH);
-		this.add(imageLabel, BorderLayout.CENTER);
-		this.add(vButtonsPanel, BorderLayout.SOUTH);
+		initVideoComponent(file, new VideoListener(this));
 	}
 
 	/**
-	 * default constructor
+	 * @param file
 	 */
-	public VideoComponent(final File file)
+	private void initVideoComponent(final File file, final ActionListener listen)
 	{
 		imageLabel = new JLabel(images.iconBarLowerIcon);
 		imageLabel.setVisible(false);
 		imageLabel.setPreferredSize(new Dimension(320, 15));
-		vListen = new VideoListener(this);
 		vPanel = new VideoPanel();
 		vPanel.openFromFile(file);
-		vButtonsPanel = new VideoButtonsPanel(vListen);
+		vButtonsPanel = new VideoButtonsPanel(this, listen);
 		this.setPreferredSize(new Dimension(368, 370));
 		this.setSize(368, 370);
 		this.setLayout(new BorderLayout());
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Video"));
+
 		this.add(vPanel, BorderLayout.NORTH);
 		this.add(imageLabel, BorderLayout.CENTER);
 		this.add(vButtonsPanel, BorderLayout.SOUTH);
@@ -71,17 +54,12 @@ public class VideoComponent extends JComponent
 		return imageLabel;
 	}
 
-	protected VideoButtonsPanel getVideoButtonsPanel()
+	public VideoButtonsPanel getVideoButtonsPanel()
 	{
 		return vButtonsPanel;
 	}
 
-	protected VideoListener getVideoListener()
-	{
-		return vListen;
-	}
-
-	protected VideoPanel getVideoPanel()
+	public VideoPanel getVideoPanel()
 	{
 		return vPanel;
 	}

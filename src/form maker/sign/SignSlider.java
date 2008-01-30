@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import javax.swing.JSlider;
 
 /**
- * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: SignSlider.java 52 2007-11-08 03:56:17Z martin $
- *
+ * @version $Id: SignSlider.java 117 2008-01-29 16:38:20Z martin $
  */
 public class SignSlider extends JSlider
 {
@@ -17,7 +14,7 @@ public class SignSlider extends JSlider
 	 * 
 	 */
 	private static final long	serialVersionUID	= 7113730238611494245L;
-	private ArrayList<Sign>	signs;
+	private ArrayList<Sign>		signs;
 	private int					activeStart;
 	private int					activeEnd;
 	private SignSliderUI		sUI;

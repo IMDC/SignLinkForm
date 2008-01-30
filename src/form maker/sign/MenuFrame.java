@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  * This is a frame class for the sign-link editor. It is to hold the menus.
  * 
  * @author Martin Gerdzhev
- * @version $Id: MenuFrame.java 92 2007-12-18 18:48:20Z laurel $
+ * @version $Id: MenuFrame.java 118 2008-01-29 17:56:25Z martin $
  */
 public class MenuFrame extends JFrame
 {

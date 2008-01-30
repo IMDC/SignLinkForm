@@ -8,11 +8,8 @@ import javax.swing.JSlider;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 /**
- * 
  * @author Martin Gerdzhev
- * 
- * @version $Id: SignSliderUI.java 52 2007-11-08 03:56:17Z martin $
- *
+ * @version $Id: SignSliderUI.java 117 2008-01-29 16:38:20Z martin $
  */
 public class SignSliderUI extends BasicSliderUI
 {
@@ -83,21 +80,16 @@ public class SignSliderUI extends BasicSliderUI
 		g.setColor(Color.BLACK);
 		g.drawRect(track.x, track.y, track.width - 2, track.height - 2);
 		g.drawRect(track.x - 1, track.y - 1, track.width, track.height);
-		if (slide.getSigns().size() > 0)
+		if (slide.isRecording())
 		{
-			g.setColor(Color.BLUE);
-			for (int i = 0; i < slide.getSigns().size(); i++)
-			{ // changed here to getcoordfromvalue
-				g.fill3DRect(this.xPositionForValue(slide.getSigns().get(i).getMStart()), (int) getTrackRect().getY() + 1, this
-						.xPositionForValue(slide.getSigns().get(i).getMEnd())
-						- this.xPositionForValue(slide.getSigns().get(i).getMStart()), (int) getTrackRect().getHeight() - 3, false);
-			}
+			g.setColor(Color.GRAY);
+			g.fill3DRect(track.x+1, track.y+1, thumbRect.x-2, track.height-3, true);
 		}
-		if (slide.getActiveStart() != -1 && slide.getActiveEnd() != -1)
+		else
 		{
-			g.setColor(Color.RED);
-			g.fill3DRect(slide.getActiveStart(), (int) getTrackRect().getY() + 1, slide.getActiveEnd() - slide.getActiveStart(),
-					(int) getTrackRect().getHeight() - 3, false);
+			if (slide.getSigns().size() > 0)
+			{
+				g.setColor(Color.BLUE);
 		}
 	}
 

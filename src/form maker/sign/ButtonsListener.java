@@ -20,7 +20,7 @@ import javax.swing.JProgressBar;
  * A listener Class for the file manipulation buttons and menu items
  * 
  * @author Martin Gerdzhev
- * @version $Id: ButtonsListener.java 105 2008-01-15 16:29:37Z martin $
+ * @version $Id: ButtonsListener.java 112 2008-01-28 17:32:02Z martin $
  */
 
 public class ButtonsListener implements ActionListener
@@ -293,12 +293,9 @@ public class ButtonsListener implements ActionListener
 
 		if (jfc.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION)
 		{
-			if (jfc.getSelectedFile().getName().endsWith(".sgn"))
+			if (jfc.getSelectedFile().getName().toLowerCase().endsWith(".sgn"))
 			{
-				destinationFileURL = jfc.getSelectedFile().getAbsolutePath();
-			}
-			else if (jfc.getSelectedFile().getName().toLowerCase().endsWith(".sgn"))
-			{
+			
 				destinationFileURL = jfc.getSelectedFile().getAbsolutePath().substring(0,
 						jfc.getSelectedFile().getAbsolutePath().lastIndexOf("."))
 						+ ".sgn";
