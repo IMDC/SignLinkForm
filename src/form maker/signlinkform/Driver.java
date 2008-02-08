@@ -31,6 +31,6 @@ public class Driver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		QuestionList.getInstance();
+		WelcomeFrame.getInstance();
 	}
 }
