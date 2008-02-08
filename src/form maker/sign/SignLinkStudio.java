@@ -123,7 +123,7 @@ public class SignLinkStudio
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
-		HelpFrame.setHelpEnabled(true); // sets whether asl tooltips are available(help videos)
+		HelpFrame.setHelpEnabled(false); // sets whether asl tooltips are available(help videos)
 		WelcomeFrame.getInstance();
 	}
 }

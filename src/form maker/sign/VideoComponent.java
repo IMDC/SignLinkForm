@@ -2,6 +2,7 @@ package sign;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JComponent;
@@ -25,12 +26,21 @@ public class VideoComponent extends JComponent
 	private JLabel				imageLabel;
 
 	/**
+	 * default constructor
+	 */
+	public VideoComponent(final File file)
 	{
 		initVideoComponent(file, new VideoListener(this));
 	}
 
+	public VideoComponent(final File file, final ActionListener listen)
+	{
+		initVideoComponent(file, listen);
+	}
+
 	/**
 	 * @param file
+	 * @param listen
 	 */
 	private void initVideoComponent(final File file, final ActionListener listen)
 	{

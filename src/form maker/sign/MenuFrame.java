@@ -59,7 +59,7 @@ public class MenuFrame extends JFrame
 			MenuFrame.this.cleanUp();
 			MenuFrame.this.setVisible(false);
 			MenuFrame.this.dispose();
-			SignUtils.cleanUpAndExit(0);
+			//SignUtils.cleanUpAndExit(0);
 		}
 	}
 

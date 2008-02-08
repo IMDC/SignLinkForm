@@ -208,6 +208,7 @@ public class VideoButtonsPanel extends JPanel
 		vText.setMaximumSize(new Dimension(65, 25));
 		vText.setPreferredSize(new Dimension(65, 25));
 		vText.setText("00:00:000");
+		Font font = new Font("arial", Font.PLAIN, 12);
 		vText.setFont(font);
 		vText.setEditable(false);
 		vText.setBackground(Color.WHITE);

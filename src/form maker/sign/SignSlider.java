@@ -18,6 +18,7 @@ public class SignSlider extends JSlider
 	private int					activeStart;
 	private int					activeEnd;
 	private SignSliderUI		sUI;
+	private boolean				recording;
 
 	public SignSlider()
 	{
@@ -25,6 +26,7 @@ public class SignSlider extends JSlider
 		signs = new ArrayList<Sign>();
 		activeStart = -1;
 		activeEnd = -1;
+		recording = false;
 	}
 
 	public SignSlider(final int st, final int maximum, final int cur)
@@ -33,6 +35,7 @@ public class SignSlider extends JSlider
 		signs = new ArrayList<Sign>();
 		activeStart = -1;
 		activeEnd = -1;
+		recording = false;
 	}
 
 	protected int getActiveEnd()
@@ -125,5 +128,23 @@ public class SignSlider extends JSlider
 	{
 		this.setValue(sUI.getValueForX(coord));
 		this.fireStateChanged();
+	}
+
+	/**
+	 * Getter method to return the value of recording
+	 * @return the recording
+	 */
+	public boolean isRecording()
+	{
+		return this.recording;
+	}
+
+	/**
+	 * Setter method to set the value of recording
+	 * @param recording the value to set
+	 */
+	public void setRecording(boolean recording)
+	{
+		this.recording = recording;
 	}
 }

@@ -90,6 +90,19 @@ public class SignSliderUI extends BasicSliderUI
 			if (slide.getSigns().size() > 0)
 			{
 				g.setColor(Color.BLUE);
+				for (int i = 0; i < slide.getSigns().size(); i++)
+				{ // changed here to getcoordfromvalue
+					g.fill3DRect(this.xPositionForValue(slide.getSigns().get(i).getMStart()), (int) getTrackRect().getY() + 1, this
+							.xPositionForValue(slide.getSigns().get(i).getMEnd())
+							- this.xPositionForValue(slide.getSigns().get(i).getMStart()), (int) getTrackRect().getHeight() - 3, false);
+				}
+			}
+			if (slide.getActiveStart() != -1 && slide.getActiveEnd() != -1)
+			{
+				g.setColor(Color.RED);
+				g.fill3DRect(slide.getActiveStart(), (int) getTrackRect().getY() + 1, slide.getActiveEnd() - slide.getActiveStart(),
+						(int) getTrackRect().getHeight() - 3, false);
+			}
 		}
 	}
 
